@@ -80,3 +80,25 @@ class Prediction:
         if self.real_values is None:
             raise ValueError("You need to provide an input for real_values.")
         return np.mean(self.real_values == self.fitted_values)
+
+    def as_pdseries(self):
+        """Return the fitted values as pandas series."""
+        if isinstance(self.fitted_values, pd.Series):
+            return self.fitted_values
+        return pd.Series(self.fitted_values)
+
+    def as_nparray(self):
+        """Return the fitted values as a numpy array."""
+        if isinstance(self.fitted_values, np.ndarray):
+            return self.fitted_values
+        return np.array(self.fitted_values)
+
+    def as_dataframe(self):
+        """Return prediction as a dataframe containing various information over
+        the prediction quality."""
+        data = {
+            "Fitted Values": self.fitted_values,
+            "Real Values": self.real_values,
+            "Prediction Matches": self.is_correct,
+        }
+        return pd.DataFrame(data)
