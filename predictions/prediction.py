@@ -74,16 +74,14 @@ class Prediction:
     def is_correct(self) -> Union[np.ndarray, pd.Series]:
         """Return a boolean array of length N with True where fitted value is
         equal to real value."""
-        if self.real_values is None:
-            raise ValueError("You need to provide an input for real_values.")
+        self._error_if_no_real_value()
         return self.real_values == self.fitted_values
 
     @property
     def accuracy_score(self) -> float:
         """Return a float representing the percent of items which are equal
         between the real and the fitted values."""
-        if self.real_values is None:
-            raise ValueError("You need to provide an input for real_values.")
+        self._error_if_no_real_value()
         return np.mean(self.real_values == self.fitted_values)
 
     def as_pdseries(self):
@@ -107,3 +105,8 @@ class Prediction:
             "Prediction Matches": self.is_correct,
         }
         return pd.DataFrame(data)
+
+    def _error_if_no_real_value(self):
+        """Raise a ValueError if real_values is None."""
+        if self.real_values is None:
+            raise ValueError("You need to provide an input for real_values.")
