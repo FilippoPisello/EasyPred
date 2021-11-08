@@ -66,6 +66,11 @@ class Prediction:
         return self.fitted_values * other
 
     @property
+    def is_numeric(self) -> bool:
+        """Return True if fitted values are numeric, False otherwise."""
+        return pd.api.types.is_numeric_dtype(self.fitted_values)
+
+    @property
     def is_correct(self) -> Union[np.ndarray, pd.Series]:
         """Return a boolean array of length N with True where fitted value is
         equal to real value."""

@@ -46,6 +46,14 @@ class TestPrediction(TestCase):
         np.testing.assert_array_equal(self.pred_l1l2.fitted_values, self.a1)
         np.testing.assert_array_equal(self.pred_l1l2.real_values, self.a2)
 
+        # Check that being numeric is correctly detected
+        self.assertTrue(self.pred_l1l2.is_numeric)
+        self.assertTrue(self.pred_s1s2.is_numeric)
+        self.assertTrue(Prediction([0.1, 0.2], [0.1, 0.2]).is_numeric)
+
+        l1 = ["a", "b"]
+        self.assertFalse(Prediction(l1, None).is_numeric)
+        self.assertFalse(Prediction(np.array(l1)).is_numeric)
 
     def test_is_correct(self):
         """Test if correctness check happens in the right way."""
