@@ -24,6 +24,7 @@ class Prediction:
         self.fitted_values = fitted_values
         self.real_values = real_values
 
+        # Processing appening at __init__
         self._check_lengths_match()
         self._lists_to_nparray()
 
@@ -83,6 +84,15 @@ class Prediction:
         between the real and the fitted values."""
         self._error_if_no_real_value()
         return np.mean(self.real_values == self.fitted_values)
+
+    @property
+    def residuals(self) -> Union[np.ndarray, pd.Series]:
+        """Return an array with the difference between the real values and the
+        fitted values."""
+        self._error_if_no_real_value()
+        if not self.is_numeric:
+            raise TypeError("Residuals cannot be computed for non-numeric series.")
+        return self.real_values - self.fitted_values
 
     def as_pdseries(self):
         """Return the fitted values as pandas series."""

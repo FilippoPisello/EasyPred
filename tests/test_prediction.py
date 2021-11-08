@@ -1,3 +1,4 @@
+from typing import Type
 from unittest import TestCase
 
 import numpy as np
@@ -6,11 +7,13 @@ from predictions.prediction import Prediction
 
 
 class TestPrediction(TestCase):
+    """Check the correct functioning of the prediction class."""
 
     l1 = [1, 2, 3]
     l2 = [1, 2, 3]
     l3 = [1, 2, 4]
     l4 = [1, 2, 4, 5]
+    l5 = ["a", "b"]
     pred_l1l2 = Prediction(l1, l2)
     pred_l1l3 = Prediction(l1, l3)
 
@@ -51,9 +54,8 @@ class TestPrediction(TestCase):
         self.assertTrue(self.pred_s1s2.is_numeric)
         self.assertTrue(Prediction([0.1, 0.2], [0.1, 0.2]).is_numeric)
 
-        l1 = ["a", "b"]
-        self.assertFalse(Prediction(l1, None).is_numeric)
-        self.assertFalse(Prediction(np.array(l1)).is_numeric)
+        self.assertFalse(Prediction(self.l5, None).is_numeric)
+        self.assertFalse(Prediction(np.array(self.l5)).is_numeric)
 
     def test_is_correct(self):
         """Test if correctness check happens in the right way."""
@@ -76,3 +78,19 @@ class TestPrediction(TestCase):
         self.assertEqual(self.pred_l1l3.accuracy_score, 2 / 3)
         self.assertEqual(self.pred_a1a3.accuracy_score, 2 / 3)
         self.assertEqual(self.pred_s1s3.accuracy_score, 2 / 3)
+
+    def test_residuals(self):
+        """Test if residuals are computed correctly"""
+        # Check that error is raised correctly when real_values is not provided
+        p1 = Prediction(self.l1, None)
+        self.assertRaises(ValueError, lambda x: x.residuals, p1)
+        # Check that error is raised correctly when real_values is non-numeric
+        p2 = Prediction(self.l5, self.l5)
+        self.assertRaises(TypeError, lambda x: x.residuals, p2)
+
+        # Check actual residuals
+        p1.real_values = self.l1
+        np.testing.assert_array_equal(p1.residuals, np.array([0, 0, 0]))
+
+        np.testing.assert_array_equal(self.pred_l1l3.residuals, np.array([0, 0, 1]))
+        pd.testing.assert_series_equal(self.pred_s1s3.residuals, pd.Series([0, 0, 1]))
