@@ -24,7 +24,18 @@ class Prediction:
         self.fitted_values = fitted_values
         self.real_values = real_values
 
-    def __post_init__(self):
+        self._check_lengths_match()
+        self._lists_to_nparray()
+
+    def _lists_to_nparray(self) -> None:
+        """Turn lists into numpy arrays."""
+        if isinstance(self.fitted_values, list):
+            self.fitted_values = np.array(self.fitted_values)
+        if isinstance(self.real_values, list):
+            self.real_values = np.array(self.real_values)
+
+    def _check_lengths_match(self) -> None:
+        """Check that fitted values and real values have the same length."""
         if self.real_values is None:
             return
 
@@ -35,12 +46,6 @@ class Prediction:
                 + f"Fitted values has length: {len_fit}.\n"
                 + f"Real values has length: {len_real}."
             )
-
-        if isinstance(self.fitted_values, list):
-            self.fitted_values = np.array(self.fitted_values)
-        if isinstance(self.real_values, list):
-            self.real_values = np.array(self.real_values)
-
 
     def __str__(self):
         return self.fitted_values.__str__()
