@@ -1,3 +1,9 @@
+"""Contains the generic Prediction class. This class should represent any kind
+of prediction interpreted as fitted array X hoping to be close to real array Y.
+
+The Prediction class allows to compute some metrics concerning the accuracy
+without needing to know how the prediction was computed."""
+
 from typing import Union
 
 import numpy as np
