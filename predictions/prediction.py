@@ -4,7 +4,7 @@ of prediction interpreted as fitted array X hoping to be close to real array Y.
 The Prediction class allows to compute some metrics concerning the accuracy
 without needing to know how the prediction was computed."""
 
-from typing import Union
+from typing import Any, Union
 
 import numpy as np
 import pandas as pd
@@ -14,7 +14,7 @@ class Prediction:
     def __init__(
         self,
         fitted_values: Union[np.ndarray, pd.Series, list],
-        real_values: Union[np.ndarray, pd.Series, list, None] = None,
+        real_values: Union[np.ndarray, pd.Series, list],
     ):
         """Class to represent a generic prediction.
 
@@ -23,7 +23,7 @@ class Prediction:
         fitted_values: Union[np.ndarray, pd.Series, list]
             The array-like object of length N containing the fitted values. If list,
             it will be turned into np.array.
-        real_values: Union[np.ndarray, pd.Series, list, None], optional
+        real_values: Union[np.ndarray, pd.Series, list]
             The array-like object containing the real values. It must have the same
             length of fitted_values. If list, it will be turned into np.array.
         """
@@ -60,69 +60,153 @@ class Prediction:
     def __len__(self):
         return len(self.fitted_values)
 
-    def __add__(self, other):
-        return self.fitted_values + other
-
-    def __sub__(self, other):
-        return self.fitted_values - other
-
-    def __truediv__(self, other):
-        return self.fitted_values / other
-
-    def __mul__(self, other):
-        return self.fitted_values * other
-
     @property
     def is_numeric(self) -> bool:
         """Return True if fitted values are numeric, False otherwise."""
         return pd.api.types.is_numeric_dtype(self.fitted_values)
 
     @property
-    def is_correct(self) -> Union[np.ndarray, pd.Series]:
-        """Return a boolean array of length N with True where fitted value is
-        equal to real value."""
-        self._error_if_no_real_value()
-        return self.real_values == self.fitted_values
-
-    @property
-    def accuracy_score(self) -> float:
+    def percentage_correctly_classified(self) -> float:
         """Return a float representing the percent of items which are equal
         between the real and the fitted values."""
-        self._error_if_no_real_value()
         return np.mean(self.real_values == self.fitted_values)
 
-    @property
-    def residuals(self) -> Union[np.ndarray, pd.Series]:
-        """Return an array with the difference between the real values and the
-        fitted values."""
-        self._error_if_no_real_value()
-        if not self.is_numeric:
-            raise TypeError("Residuals cannot be computed for non-numeric series.")
-        return self.real_values - self.fitted_values
+    # DEFYINING ALIAS
+    pcc = percentage_correctly_classified
 
-    def as_pdseries(self):
-        """Return the fitted values as pandas series."""
-        if isinstance(self.fitted_values, pd.Series):
-            return self.fitted_values
-        return pd.Series(self.fitted_values)
+    def matches(self) -> Union[np.ndarray, pd.Series]:
+        """Return a boolean array of length N with True where fitted value is
+        equal to real value."""
+        return self.real_values == self.fitted_values
 
-    def as_nparray(self):
-        """Return the fitted values as a numpy array."""
-        if isinstance(self.fitted_values, np.ndarray):
-            return self.fitted_values
-        return np.array(self.fitted_values)
-
-    def as_dataframe(self):
+    def as_dataframe(self) -> pd.DataFrame:
         """Return prediction as a dataframe containing various information over
         the prediction quality."""
         data = {
             "Fitted Values": self.fitted_values,
             "Real Values": self.real_values,
-            "Prediction Matches": self.is_correct,
+            "Prediction Matches": self.matches(),
         }
         return pd.DataFrame(data)
 
-    def _error_if_no_real_value(self):
-        """Raise a ValueError if real_values is None."""
-        if self.real_values is None:
-            raise ValueError("You need to provide an input for real_values.")
+
+class NumericPrediction(Prediction):
+    @property
+    def r_squared(self) -> float:
+        """Returns the r squared calculated as the square of the correlation
+        coefficient."""
+        return np.corrcoef(self.real_values, self.fitted_values)[0, 1] ** 2
+
+    def residuals(
+        self, squared: bool = False, absolute_value: bool = False
+    ) -> Union[np.ndarray, pd.Series]:
+        """Return an array with the difference between the real values and the
+        fitted values."""
+        residuals = self.real_values - self.fitted_values
+        if squared:
+            return residuals ** 2
+        if absolute_value:
+            return abs(residuals)
+        return residuals
+
+    def matches(self, tolerance: float = 0.0) -> Union[np.ndarray, pd.Series]:
+        """Return a boolean array of length N with True where fitted value is
+        equal to real value."""
+        return abs(self.real_values - self.fitted_values) <= tolerance
+
+    def as_dataframe(self) -> pd.DataFrame:
+        """Return prediction as a dataframe containing various information over
+        the prediction quality."""
+        residuals = self.residuals()
+        data = {
+            "Fitted Values": self.fitted_values,
+            "Real Values": self.real_values,
+            "Prediction Matches": self.matches(),
+            "Absolute difference": residuals,
+            "Relative difference": residuals / self.real_values,
+        }
+        return pd.DataFrame(data)
+
+
+class BinaryPrediction(Prediction):
+    def __init__(
+        self,
+        fitted_values: Union[np.ndarray, pd.Series, list],
+        real_values: Union[np.ndarray, pd.Series, list],
+        value_positive: Any = 1,
+    ):
+        """Class to represent a generic prediction.
+
+        Arguments
+        -------
+        fitted_values: Union[np.ndarray, pd.Series, list]
+            The array-like object of length N containing the fitted values. If list,
+            it will be turned into np.array.
+
+        real_values: Union[np.ndarray, pd.Series, list]
+            The array-like object containing the real values. It must have the same
+            length of fitted_values. If list, it will be turned into np.array.
+
+        value_positive: Any
+            The value in the data that corresponds to 1 in the boolean logic.
+            It is generally associated with the idea of "positive" or being in
+            the "treatment" group. By default is 1.
+        """
+        super().__init__(fitted_values, real_values)
+        self.value_positive = value_positive
+
+    @property
+    def value_negative(self):
+        other_only = self.real_values[self.real_values != self.value_positive]
+        if isinstance(self.real_values, np.ndarray):
+            return other_only[0].copy()
+        return other_only.reset_index(drop=True)[0]
+
+    @property
+    def false_positive_rate(self):
+        pred_pos = self.fitted_values == self.value_positive
+        real_neg = self.real_values != self.value_positive
+
+        false_positive = pred_pos & real_neg
+        return false_positive.sum() / real_neg.sum()
+
+    @property
+    def false_negative_rate(self):
+        pred_neg = self.fitted_values != self.value_positive
+        real_pos = self.real_values == self.value_positive
+
+        false_negative = pred_neg & real_pos
+        return false_negative.sum() / real_pos.sum()
+
+    @property
+    def sensitivity(self):
+        pred_pos = self.fitted_values == self.value_positive
+        real_pos = self.real_values == self.value_positive
+
+        caught_positive = pred_pos & real_pos
+        return caught_positive.sum() / (pred_pos | real_pos).sum()
+
+    @property
+    def specificity(self):
+        pred_neg = self.fitted_values != self.value_positive
+        real_neg = self.real_values != self.value_positive
+
+        caught_negative = pred_neg & real_neg
+        return caught_negative.sum() / (pred_neg | real_neg).sum()
+
+    def confusion_matrix(
+        self, as_dataframe: bool = False
+    ) -> Union[np.ndarray, pd.DataFrame]:
+        pred_pos = self.fitted_values == self.value_positive
+        pred_neg = self.fitted_values != self.value_positive
+        real_pos = self.real_values == self.value_positive
+        real_neg = self.real_values != self.value_positive
+
+        conf = np.array(
+            [
+                [(pred_neg & real_neg).sum(), (pred_pos & real_neg).sum()],
+                [(pred_neg & real_pos).sum(), (pred_pos & real_pos).sum()],
+            ]
+        )
+        if not as_dataframe:
+            return conf

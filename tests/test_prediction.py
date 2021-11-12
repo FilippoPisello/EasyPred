@@ -60,24 +60,24 @@ class TestPrediction(TestCase):
     def test_is_correct(self):
         """Test if correctness check happens in the right way."""
         res1 = np.array([True, True, True])
-        np.testing.assert_array_equal(self.pred_l1l2.is_correct, res1)
-        np.testing.assert_array_equal(self.pred_a1a2.is_correct, res1)
-        pd.testing.assert_series_equal(self.pred_s1s2.is_correct, pd.Series(res1))
+        np.testing.assert_array_equal(self.pred_l1l2.matches, res1)
+        np.testing.assert_array_equal(self.pred_a1a2.matches, res1)
+        pd.testing.assert_series_equal(self.pred_s1s2.matches, pd.Series(res1))
 
         res2 = np.array([True, True, False])
-        np.testing.assert_array_equal(self.pred_l1l3.is_correct, res2)
-        np.testing.assert_array_equal(self.pred_a1a3.is_correct, res2)
-        pd.testing.assert_series_equal(self.pred_s1s3.is_correct, pd.Series(res2))
+        np.testing.assert_array_equal(self.pred_l1l3.matches, res2)
+        np.testing.assert_array_equal(self.pred_a1a3.matches, res2)
+        pd.testing.assert_series_equal(self.pred_s1s3.matches, pd.Series(res2))
 
     def test_accuracy(self):
         """Test if accuracy is computed correctly."""
-        self.assertEqual(self.pred_l1l2.accuracy_score, 1)
-        self.assertEqual(self.pred_a1a2.accuracy_score, 1)
-        self.assertEqual(self.pred_s1s2.accuracy_score, 1)
+        self.assertEqual(self.pred_l1l2.percentage_correctly_classified, 1)
+        self.assertEqual(self.pred_a1a2.percentage_correctly_classified, 1)
+        self.assertEqual(self.pred_s1s2.percentage_correctly_classified, 1)
 
-        self.assertEqual(self.pred_l1l3.accuracy_score, 2 / 3)
-        self.assertEqual(self.pred_a1a3.accuracy_score, 2 / 3)
-        self.assertEqual(self.pred_s1s3.accuracy_score, 2 / 3)
+        self.assertEqual(self.pred_l1l3.percentage_correctly_classified, 2 / 3)
+        self.assertEqual(self.pred_a1a3.percentage_correctly_classified, 2 / 3)
+        self.assertEqual(self.pred_s1s3.percentage_correctly_classified, 2 / 3)
 
     def test_residuals(self):
         """Test if residuals are computed correctly"""
