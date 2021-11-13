@@ -1,8 +1,12 @@
-"""Contains the generic Prediction class. This class should represent any kind
-of prediction interpreted as fitted array X hoping to be close to real array Y.
+"""Contains the generic Prediction class and its subclasses. This class represents
+any kind of prediction interpreted as fitted array X hoping to be close to
+real array Y.
 
 The Prediction class allows to compute some metrics concerning the accuracy
-without needing to know how the prediction was computed."""
+without needing to know how the prediction was computed.
+
+The subclasses allow for metrics that are relevant for just specific types
+of predictions."""
 
 from typing import Any, Union
 
@@ -11,6 +15,24 @@ import pandas as pd
 
 
 class Prediction:
+    """Class to represent a generic prediction.
+
+    Attributes
+    -------
+    fitted_values: Union[np.ndarray, pd.Series, list]
+        The array-like object of length N containing the fitted values.
+    real_values: Union[np.ndarray, pd.Series, list]
+        The array-like object containing the N real values.
+
+    Properties
+    -------
+    percentage_correctly_classified: float
+        The decimal representing the percentage of elements for which fitted
+        and real value coincide.
+    pcc: float
+        Alias for percentage_correctly_classified.
+    """
+
     def __init__(
         self,
         fitted_values: Union[np.ndarray, pd.Series, list],
@@ -91,6 +113,27 @@ class Prediction:
 
 
 class NumericPrediction(Prediction):
+    """Class to represent a numerical prediction.
+
+    Attributes
+    -------
+    fitted_values: Union[np.ndarray, pd.Series, list]
+        The array-like object of length N containing the fitted values.
+    real_values: Union[np.ndarray, pd.Series, list]
+        The array-like object containing the N real values.
+
+    Properties
+    -------
+    percentage_correctly_classified: float
+        The decimal representing the percentage of elements for which fitted
+        and real value coincide.
+    pcc: float
+        Alias for percentage_correctly_classified.
+    r_squared : float
+        R squared coefficient calculated as the square of the correlation
+        coefficient between fitted and real values.
+    """
+
     @property
     def r_squared(self) -> float:
         """Returns the r squared calculated as the square of the correlation
@@ -130,6 +173,42 @@ class NumericPrediction(Prediction):
 
 
 class BinaryPrediction(Prediction):
+    """Class to represent a binary prediction.
+
+    Attributes
+    -------
+    fitted_values: Union[np.ndarray, pd.Series, list]
+        The array-like object of length N containing the fitted values.
+    real_values: Union[np.ndarray, pd.Series, list]
+        The array-like object containing the N real values.
+    value_positive: Any
+        The value in the data that corresponds to 1 in the boolean logic.
+        It is generally associated with the idea of "positive" or being in
+        the "treatment" group. By default is 1.
+
+    Properties
+    -------
+    false_negative_rate : float
+        The ratio between the number of wrongly predicted negative
+        and the total number of positives.
+    false_positive_rate : float
+        The ratio between the number of wrongly predicted positive
+        and the total number of negatives.
+    percentage_correctly_classified: float
+        The decimal representing the percentage of elements for which fitted
+        and real value coincide.
+    pcc: float
+        Alias for percentage_correctly_classified.
+    sensitivity : float
+        The ratio between the correctly predicted positive and the total number
+        of real positive.
+    specificity : float
+        The ratio between the correctly predicted negative and the
+        total number of real negative.
+    value_negative : Any
+        The value that it is not the positive value.
+    """
+
     def __init__(
         self,
         fitted_values: Union[np.ndarray, pd.Series, list],
@@ -176,7 +255,7 @@ class BinaryPrediction(Prediction):
 
     @property
     def false_negative_rate(self):
-        """Return the ration between the number of wrongly predicted negative
+        """Return the ratio between the number of wrongly predicted negative
         and the total number of positives."""
         pred_neg = self.fitted_values != self.value_positive
         real_pos = self.real_values == self.value_positive
