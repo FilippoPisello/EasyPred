@@ -111,6 +111,26 @@ class Prediction:
         }
         return pd.DataFrame(data)
 
+    def to_binary(self, value_positive: Any):
+        """Create an instance of BinaryPrediction.
+
+        Parameters
+        ----------
+        value_positive : Any
+            The value in the data that corresponds to 1 in the boolean logic.
+            It is generally associated with the idea of "positive" or being in
+            the "treatment" group. By default is 1.
+
+        Returns
+        -------
+        BinaryPrediction
+            An object of type BinaryPrediction, a subclass of Prediction specific
+            for predictions with just two outcomes.
+        """
+        return BinaryPrediction(fitted_values=self.fitted_values,
+                                real_values=self.real_values,
+                                value_positive=value_positive)
+
 
 class NumericPrediction(Prediction):
     """Class to represent a numerical prediction.
