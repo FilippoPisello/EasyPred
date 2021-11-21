@@ -1,9 +1,8 @@
-from typing import Type
 from unittest import TestCase
 
 import numpy as np
 import pandas as pd
-from predictions.prediction import BinaryPrediction, NumericPrediction, Prediction
+from predictions import BinaryPrediction, NumericPrediction, Prediction
 
 
 class TestPrediction(TestCase):
@@ -150,7 +149,7 @@ class TestNumericPrediction(TestCase):
 
 
 class TestBinaryPrediction(TestCase):
-    df = pd.read_excel("tests/test_data/binary.xlsx")
+    df = pd.read_excel("predictions/tests/test_data/binary.xlsx")
     p1 = BinaryPrediction(df["Fitted"], df["Real"], value_positive=1)
 
     def test_value_negative(self):
