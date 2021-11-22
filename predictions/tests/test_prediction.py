@@ -13,29 +13,29 @@ class TestPrediction(TestCase):
     l3 = [1, 2, 4]
     l4 = [1, 2, 4, 5]
     l5 = ["a", "b"]
-    pred_l1l2 = Prediction(l1, l2)
-    pred_l1l3 = Prediction(l1, l3)
+    pred_l1l2 = Prediction(l2, l1)
+    pred_l1l3 = Prediction(l3, l1)
 
     s1 = pd.Series(l1)
     s2 = pd.Series(l2)
     s3 = pd.Series(l3)
     s4 = pd.Series(l4)
-    pred_s1s2 = Prediction(s1, s2)
-    pred_s1s3 = Prediction(s1, s3)
+    pred_s1s2 = Prediction(s2, s1)
+    pred_s1s3 = Prediction(s3, s1)
 
     a1 = np.array(l1)
     a2 = np.array(l2)
     a3 = np.array(l3)
     a4 = np.array(l4)
-    pred_a1a2 = Prediction(a1, a2)
-    pred_a1a3 = Prediction(a1, a3)
+    pred_a1a2 = Prediction(a2, a1)
+    pred_a1a3 = Prediction(a3, a1)
 
     def test_input_check(self):
         """Check that initiation happens correctly"""
         # Check exception if length mismatch
-        self.assertRaises(ValueError, Prediction, self.l1, self.l4)
-        self.assertRaises(ValueError, Prediction, self.s1, self.s4)
-        self.assertRaises(ValueError, Prediction, self.a1, self.a4)
+        self.assertRaises(ValueError, Prediction, self.l4, self.l1)
+        self.assertRaises(ValueError, Prediction, self.s4, self.s1)
+        self.assertRaises(ValueError, Prediction, self.a4, self.a1)
 
         # Check no exception if no length mismatch
         for fit, real in zip([self.l1, self.s1, self.a1], [self.l2, self.s2, self.a2]):
@@ -84,7 +84,7 @@ class TestPrediction(TestCase):
 
     def test_makebinary(self):
         """Test if binary prediction is created correctly."""
-        p1 = Prediction([1, 0, 0], [0, 0, 1])
+        p1 = Prediction([0, 0, 1], [1, 0, 0])
         p1 = p1.to_binary(value_positive=1)
         self.assertIsInstance(p1, BinaryPrediction)
         self.assertEqual(p1.value_positive, 1)

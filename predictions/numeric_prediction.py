@@ -16,10 +16,10 @@ class NumericPrediction(Prediction):
 
     Attributes
     -------
-    fitted_values: Union[np.ndarray, pd.Series, list]
-        The array-like object of length N containing the fitted values.
     real_values: Union[np.ndarray, pd.Series, list]
         The array-like object containing the N real values.
+    fitted_values: Union[np.ndarray, pd.Series, list]
+        The array-like object of length N containing the fitted values.
 
     Properties
     -------

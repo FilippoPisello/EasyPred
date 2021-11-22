@@ -50,28 +50,26 @@ class BinaryPrediction(Prediction):
 
     def __init__(
         self,
-        fitted_values: Union[np.ndarray, pd.Series, list],
         real_values: Union[np.ndarray, pd.Series, list],
+        fitted_values: Union[np.ndarray, pd.Series, list],
         value_positive: Any = 1,
     ):
         """Class to represent a generic prediction.
 
         Arguments
         -------
-        fitted_values: Union[np.ndarray, pd.Series, list]
-            The array-like object of length N containing the fitted values. If list,
-            it will be turned into np.array.
-
         real_values: Union[np.ndarray, pd.Series, list]
             The array-like object containing the real values. It must have the same
             length of fitted_values. If list, it will be turned into np.array.
-
+        fitted_values: Union[np.ndarray, pd.Series, list]
+            The array-like object of length N containing the fitted values. If list,
+            it will be turned into np.array.
         value_positive: Any
             The value in the data that corresponds to 1 in the boolean logic.
             It is generally associated with the idea of "positive" or being in
             the "treatment" group. By default is 1.
         """
-        super().__init__(fitted_values, real_values)
+        super().__init__(real_values=real_values, fitted_values=fitted_values)
         self.value_positive = value_positive
 
     @property

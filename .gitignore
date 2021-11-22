@@ -5,3 +5,5 @@ predictions/__pycache__/numeric_prediction.cpython-39.pyc
 predictions/tests/__pycache__/__init__.cpython-39.pyc
 predictions/tests/__pycache__/test_prediction.cpython-39.pyc
 .vscode/settings.json
+predictions/tests/__pycache__/test_binary.cpython-39.pyc
+predictions/tests/__pycache__/test_numeric.cpython-39.pyc

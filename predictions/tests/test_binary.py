@@ -7,7 +7,7 @@ from predictions import BinaryPrediction
 
 class TestBinaryPrediction(TestCase):
     df = pd.read_excel("predictions/tests/test_data/binary.xlsx")
-    p1 = BinaryPrediction(df["Fitted"], df["Real"], value_positive=1)
+    p1 = BinaryPrediction(df["Real"], df["Fitted"], value_positive=1)
 
     def test_value_negative(self):
         self.assertEqual(self.p1.value_negative, 0)

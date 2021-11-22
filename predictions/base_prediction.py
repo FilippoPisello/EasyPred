@@ -18,38 +18,38 @@ class Prediction:
 
     Attributes
     -------
-    fitted_values: Union[np.ndarray, pd.Series, list]
-        The array-like object of length N containing the fitted values.
-    real_values: Union[np.ndarray, pd.Series, list]
+    real_values : Union[np.ndarray, pd.Series, list]
         The array-like object containing the N real values.
+    fitted_values : Union[np.ndarray, pd.Series, list]
+        The array-like object of length N containing the fitted values.
 
     Properties
     -------
-    percentage_correctly_classified: float
+    percentage_correctly_classified : float
         The decimal representing the percentage of elements for which fitted
         and real value coincide.
-    pcc: float
+    pcc : float
         Alias for percentage_correctly_classified.
     """
 
     def __init__(
         self,
-        fitted_values: Union[np.ndarray, pd.Series, list],
         real_values: Union[np.ndarray, pd.Series, list],
+        fitted_values: Union[np.ndarray, pd.Series, list],
     ):
         """Class to represent a generic prediction.
 
         Arguments
         -------
-        fitted_values: Union[np.ndarray, pd.Series, list]
-            The array-like object of length N containing the fitted values. If list,
-            it will be turned into np.array.
         real_values: Union[np.ndarray, pd.Series, list]
             The array-like object containing the real values. It must have the same
             length of fitted_values. If list, it will be turned into np.array.
+        fitted_values: Union[np.ndarray, pd.Series, list]
+            The array-like object of length N containing the fitted values. If list,
+            it will be turned into np.array.
         """
-        self.fitted_values = fitted_values
         self.real_values = real_values
+        self.fitted_values = fitted_values
 
         # Processing appening at __init__
         self._check_lengths_match()
@@ -64,9 +64,6 @@ class Prediction:
 
     def _check_lengths_match(self) -> None:
         """Check that fitted values and real values have the same length."""
-        if self.real_values is None:
-            return
-
         len_fit, len_real = len(self.fitted_values), len(self.real_values)
         if len_fit != len_real:
             raise ValueError(
