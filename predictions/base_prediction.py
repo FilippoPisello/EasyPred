@@ -81,6 +81,12 @@ class Prediction:
     def __len__(self):
         return len(self.fitted_values)
 
+    def __eq__(self, other):
+        return self.fitted_values == other.fitted_values
+
+    def __ne__(self, other):
+        return self.fitted_values != other.fitted_values
+
     @property
     def is_numeric(self) -> bool:
         """Return True if fitted values are numeric, False otherwise."""
