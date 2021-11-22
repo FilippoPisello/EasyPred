@@ -40,14 +40,36 @@ class NumericPrediction(Prediction):
         return np.corrcoef(self.real_values, self.fitted_values)[0, 1] ** 2
 
     def residuals(
-        self, squared: bool = False, absolute_value: bool = False
+        self,
+        squared: bool = False,
+        absolute: bool = False,
+        relative: bool = False,
     ) -> Union[np.ndarray, pd.Series]:
         """Return an array with the difference between the real values and the
-        fitted values."""
+        fitted values.
+
+        Parameters
+        ----------
+        squared : bool, optional
+            If True, the residuals are squared, by default False.
+        absolute : bool, optional
+            If True, the residuals are taken in absolute value, by default False.
+        relative : bool, optional
+            If True, the residuals are divided by the real values to return
+            a relative measure. By default False.
+
+        Returns
+        -------
+        Union[np.ndarray, pd.Series]
+            Numpy array or pandas series depending on the type of real_values and
+            fitted_values. Its shape is (N,).
+        """
         residuals = self.real_values - self.fitted_values
+        if relative:
+            residuals = residuals / self.real_values
         if squared:
             return residuals ** 2
-        if absolute_value:
+        if absolute:
             return abs(residuals)
         return residuals
 

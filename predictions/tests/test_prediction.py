@@ -123,9 +123,14 @@ class TestNumericPrediction(TestCase):
         # Squared
         np.testing.assert_array_equal(p2.residuals(squared=True), np.array([4, 16, 4]))
         # Absolute values
-        np.testing.assert_array_equal(
-            p2.residuals(absolute_value=True), np.array([2, 4, 2])
-        )
+        np.testing.assert_array_equal(p2.residuals(absolute=True), np.array([2, 4, 2]))
+        # Relative values
+        res = p2.residuals(relative=True)
+        np.testing.assert_allclose(res, np.array([0.66666667, 1.33333333, 0.66666667]))
+        # Relative + absolute values
+        p3 = NumericPrediction([1, 4, 1], [3, 3, 3])
+        res = p3.residuals(relative=True, absolute=True)
+        np.testing.assert_allclose(res, np.array([0.66666667, 0.33333333, 0.66666667]))
 
     def test_matches_with_tolerance(self):
         """Test if match with tolerance works."""
