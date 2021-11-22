@@ -73,3 +73,16 @@ class TestNumericPrediction(TestCase):
         np.testing.assert_array_equal(
             p2.matches_tolerance(tolerance=10), np.array([True, True, True])
         )
+
+    def test_metrics(self):
+        p1 = NumericPrediction([3.5, 4, 7, 1, 4, 1, 2, 8], [1, 2, 3, 4, 5, 6, 7, 8])
+        # MSE
+        self.assertAlmostEqual(10.78125, p1.mse, places=5)
+        # RMSE
+        self.assertAlmostEqual(3.28348, p1.rmse, places=5)
+        # MAE
+        self.assertAlmostEqual(2.8125, p1.mae, places=5)
+        # MAPE
+        self.assertAlmostEqual(0.916369, p1.mape, places=5)
+        # R^2
+        self.assertAlmostEqual(0.005354, p1.r_squared, places=5)
