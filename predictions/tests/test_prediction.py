@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 import pandas as pd
-from predictions import Prediction
+from predictions import BinaryPrediction, Prediction
 
 
 class TestPrediction(TestCase):
@@ -81,3 +81,13 @@ class TestPrediction(TestCase):
         self.assertEqual(self.pred_l1l3.pcc, 2 / 3)
         self.assertEqual(self.pred_a1a3.pcc, 2 / 3)
         self.assertEqual(self.pred_s1s3.pcc, 2 / 3)
+
+    def test_makebinary(self):
+        """Test if binary prediction is created correctly."""
+        p1 = Prediction([1, 0, 0], [0, 0, 1])
+        p1 = p1.to_binary(value_positive=1)
+        self.assertIsInstance(p1, BinaryPrediction)
+        self.assertEqual(p1.value_positive, 1)
+
+    def test_dataframe(self):
+        """Test if dataframe is created correctly."""
