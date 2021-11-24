@@ -91,3 +91,12 @@ class TestPrediction(TestCase):
 
     def test_dataframe(self):
         """Test if dataframe is created correctly."""
+        p1 = Prediction([0, 0, 1], [1, 0, 0])
+        exp = pd.DataFrame(
+            {
+                "Real Values": [0, 0, 1],
+                "Fitted Values": [1, 0, 0],
+                "Prediction Matches": [False, True, False],
+            }
+        )
+        pd.testing.assert_frame_equal(p1.as_dataframe(), exp, check_dtype=False)

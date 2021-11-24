@@ -107,8 +107,8 @@ class Prediction:
         """Return prediction as a dataframe containing various information over
         the prediction quality."""
         data = {
-            "Fitted Values": self.fitted_values,
             "Real Values": self.real_values,
+            "Fitted Values": self.fitted_values,
             "Prediction Matches": self.matches(),
         }
         return pd.DataFrame(data)
