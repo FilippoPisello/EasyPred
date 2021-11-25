@@ -130,7 +130,7 @@ class NumericPrediction(Prediction):
             "Fitted Values": self.fitted_values,
             "Real Values": self.real_values,
             "Prediction Matches": self.matches(),
-            "Absolute difference": residuals,
-            "Relative difference": residuals / self.real_values,
+            "Absolute Difference": residuals,
+            "Relative Difference": residuals / self.real_values,
         }
         return pd.DataFrame(data)

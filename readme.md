@@ -103,7 +103,7 @@ array([ 0,  0, -1,  1, -2,  4,  2])
 The data frame representation has now more information:
 ```python
 >>> num_pred.as_dataframe()
-   Fitted Values  Real Values  Prediction Matches  Absolute difference  Relative difference
+   Fitted Values  Real Values  Prediction Matches  Absolute Difference  Relative Difference
 0              1            1                True                    0             0.000000
 1              2            2                True                    0             0.000000
 2              4            3               False                   -1            -0.333333
@@ -125,3 +125,12 @@ There are then a number of dedicated error and accuracy metrics:
 >>> num_pred.r_squared
 0.31250000000000017
 ```
+Use the `help()` function to get more information over the prediction objects and their functionalities.
+
+## Dependencies
+EasyPred depends on the following libraries:
+- NumPy
+- pandas
+
+## License
+[MIT](LICENSE)
