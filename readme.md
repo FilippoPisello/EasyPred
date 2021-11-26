@@ -83,9 +83,9 @@ What are the false positive and false negative rates? What about sensitivity and
 Let's look now at the confusion matrix as a pandas data frame:
 ```python
 >>> bin_pred.confusion_matrix(as_dataframe=True)
-   0  1
-0  2  0
-1  1  1
+        Pred 0  Pred 1
+Real 0       2       0
+Real 1       1       1
 ```
 #### NumericPrediction
 Let's look at the numeric use case:

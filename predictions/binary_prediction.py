@@ -121,7 +121,7 @@ class BinaryPrediction(Prediction):
         return caught_negative.sum() / real_neg.sum()
 
     def confusion_matrix(
-        self, relative_frequencies: bool = False, as_dataframe: bool = False
+        self, relative: bool = False, as_dataframe: bool = False
     ) -> Union[np.ndarray, pd.DataFrame]:
         """Return the confusion matrix for the binary classification.
 
@@ -134,7 +134,7 @@ class BinaryPrediction(Prediction):
 
         Parameters
         ----------
-        relative_frequencies : bool, optional
+        relative : bool, optional
             If True, absolute frequencies are replace by relative frequencies.
             By default False.
         as_dataframe : bool, optional
@@ -160,11 +160,18 @@ class BinaryPrediction(Prediction):
         )
 
         # Divide by total number of values to obtain relative frequencies
-        if relative_frequencies:
+        if relative:
             conf_matrix = conf_matrix / len(self.fitted_values)
 
         if not as_dataframe:
             return conf_matrix
+        return self._confusion_matrix_dataframe(conf_matrix)
+
+    def _confusion_matrix_dataframe(self, conf_matrix: np.ndarray) -> pd.DataFrame:
+        """Convert a numpy confusion matrix into a pandas dataframe and add
+        index and columns labels."""
         conf_df = pd.DataFrame(conf_matrix)
-        conf_df.columns = conf_df.index = [self.value_negative, self.value_positive]
+        values = [self.value_negative, self.value_positive]
+        conf_df.columns = [f"Pred {val}" for val in values]
+        conf_df.index = [f"Real {val}" for val in values]
         return conf_df
