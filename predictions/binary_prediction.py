@@ -28,11 +28,13 @@ class BinaryPrediction(Prediction):
     Properties
     -------
     false_negative_rate : float
-        The ratio between the number of wrongly predicted negative
-        and the total number of positives.
+        Ratio between the number of wrongly predicted negative and the total
+        number of positives. It tells the percentage of positives falsely
+        classified as negative.
     false_positive_rate : float
-        The ratio between the number of wrongly predicted positive
-        and the total number of negatives.
+        Ratio between the number of wrongly predicted positive and the total
+        number of negatives. It tells the percentage of negatives falsely
+        classified as positive.
     percentage_correctly_classified: float
         The decimal representing the percentage of elements for which fitted
         and real value coincide.
@@ -40,10 +42,12 @@ class BinaryPrediction(Prediction):
         Alias for percentage_correctly_classified.
     sensitivity : float
         The ratio between the correctly predicted positive and the total number
-        of real positive.
+        of real positive. It measures how good the model is at detecting
+        positives. Aliased as "recall".
     specificity : float
-        The ratio between the correctly predicted negative and the
-        total number of real negative.
+        The ratio between the correctly predicted negative and the total number
+        of real negative. It measures how good the model is at detecting
+        negatives.
     value_negative : Any
         The value that it is not the positive value.
     """
@@ -82,40 +86,31 @@ class BinaryPrediction(Prediction):
 
     @property
     def false_positive_rate(self) -> float:
-        """Return the ration between the number of wrongly predicted positive
-        and the total number of negatives."""
-        pred_pos = self.fitted_values == self.value_positive
-        real_neg = self.real_values != self.value_positive
+        """Return the ratio between the number of false positives and the total
+        number of real negatives.
 
-        false_positive = pred_pos & real_neg
-        return false_positive.sum() / real_neg.sum()
+        It tells the percentage of negatives falsely classified as positive."""
 
     @property
     def false_negative_rate(self):
-        """Return the ratio between the number of wrongly predicted negative
-        and the total number of positives."""
-        pred_neg = self.fitted_values != self.value_positive
-        real_pos = self.real_values == self.value_positive
+        """Return the ratio between the number of false negatives and the total
+        number of real positives.
 
-        false_negative = pred_neg & real_pos
-        return false_negative.sum() / real_pos.sum()
+        It tells the percentage of positives falsely classified as negative."""
 
     @property
     def sensitivity(self):
-        """Return the ratio between the correctly predicted positive and the
-        total number of real positive."""
-        pred_pos = self.fitted_values == self.value_positive
-        real_pos = self.real_values == self.value_positive
+        """Return the ratio between the correctly predicted positives and the
+        total number of real positives.
 
-        caught_positive = pred_pos & real_pos
-        return caught_positive.sum() / real_pos.sum()
+        It measures how good the model is in detecting real positives."""
 
     @property
     def specificity(self):
-        """Return the ratio between the correctly predicted negative and the
-        total number of real negative."""
-        pred_neg = self.fitted_values != self.value_positive
-        real_neg = self.real_values != self.value_positive
+        """Return the ratio between the correctly predicted negatives and the
+        total number of real negatives.
+
+        It measures how good the model is in detecting real negatives."""
 
         caught_negative = pred_neg & real_neg
         return caught_negative.sum() / real_neg.sum()
