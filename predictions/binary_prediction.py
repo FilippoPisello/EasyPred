@@ -35,11 +35,21 @@ class BinaryPrediction(Prediction):
         Ratio between the number of wrongly predicted positive and the total
         number of negatives. It tells the percentage of negatives falsely
         classified as positive.
+    negative_predicted_value : float
+        Ratio between the number of correctly classified negative and the total
+        number of predicted negative. It measures how accurate the negative
+        predictions are.
     percentage_correctly_classified: float
         The decimal representing the percentage of elements for which fitted
         and real value coincide.
     pcc: float
         Alias for percentage_correctly_classified.
+    positive_predicted_value : float
+        The ratio between the number of correctly predicted positives
+        and the total number predicted positives. It measures how accurate the
+        positive predictions are.
+    precision : float
+        Alias fo positive_predicted_value.
     recall : float
         Alias for sensitivity.
     sensitivity : float
@@ -141,8 +151,26 @@ class BinaryPrediction(Prediction):
         caught_negative = self._pred_neg & self._real_neg
         return caught_negative.sum() / self._real_neg.sum()
 
-        caught_negative = pred_neg & real_neg
-        return caught_negative.sum() / real_neg.sum()
+    @property
+    def positive_predictive_value(self):
+        """Return the ratio between the number of correctly predicted positives
+        and the total number predicted positives.
+
+        It measures how accurate the positive predictions are."""
+        caught_positive = self._pred_pos & self._real_pos
+        return caught_positive.sum() / self._pred_pos.sum()
+
+    # Defyining Alias
+    precision = positive_predictive_value
+
+    @property
+    def negative_predictive_value(self):
+        """Return the ratio between the number of correctly classified negative
+        and the total number of predicted negative.
+
+        It measures how accurate the negative predictions are."""
+        caught_negative = self._pred_neg & self._real_neg
+        return caught_negative.sum() / self._pred_neg.sum()
 
     def confusion_matrix(
         self, relative: bool = False, as_dataframe: bool = False
@@ -199,3 +227,16 @@ class BinaryPrediction(Prediction):
         conf_df.columns = [f"Pred {val}" for val in values]
         conf_df.index = [f"Real {val}" for val in values]
         return conf_df
+
+    def describe(self) -> pd.DataFrame:
+        """Return a dataframe containing some key information about the
+        prediction."""
+        basic_info = self._describe()
+        new_info = pd.DataFrame(
+            {
+                "Sensitivity": self.sensitivity,
+                "Specificity": self.specificity,
+                "Positive PV": self.positive_predictive_value,
+                "Negative PV": self.negative_predictive_value,
+            }
+        )
