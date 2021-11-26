@@ -87,11 +87,29 @@ class BinaryPrediction(Prediction):
         return other_only.reset_index(drop=True)[0]
 
     @property
+    def _pred_pos(self) -> Union[np.ndarray, pd.Series]:
+        return self.fitted_values == self.value_positive
+
+    @property
+    def _pred_neg(self) -> Union[np.ndarray, pd.Series]:
+        return self.fitted_values == self.value_negative
+
+    @property
+    def _real_pos(self) -> Union[np.ndarray, pd.Series]:
+        return self.real_values == self.value_positive
+
+    @property
+    def _real_neg(self) -> Union[np.ndarray, pd.Series]:
+        return self.real_values == self.value_negative
+
+    @property
     def false_positive_rate(self) -> float:
         """Return the ratio between the number of false positives and the total
         number of real negatives.
 
         It tells the percentage of negatives falsely classified as positive."""
+        false_positive = self._pred_pos & self._real_neg
+        return false_positive.sum() / self._real_neg.sum()
 
     @property
     def false_negative_rate(self):
@@ -99,6 +117,8 @@ class BinaryPrediction(Prediction):
         number of real positives.
 
         It tells the percentage of positives falsely classified as negative."""
+        false_negative = self._pred_neg & self._real_pos
+        return false_negative.sum() / self._real_pos.sum()
 
     @property
     def sensitivity(self):
@@ -106,6 +126,9 @@ class BinaryPrediction(Prediction):
         total number of real positives.
 
         It measures how good the model is in detecting real positives."""
+        caught_positive = self._pred_pos & self._real_pos
+        return caught_positive.sum() / self._real_pos.sum()
+
     # Defyining Alias
     recall = sensitivity
 
@@ -115,6 +138,8 @@ class BinaryPrediction(Prediction):
         total number of real negatives.
 
         It measures how good the model is in detecting real negatives."""
+        caught_negative = self._pred_neg & self._real_neg
+        return caught_negative.sum() / self._real_neg.sum()
 
         caught_negative = pred_neg & real_neg
         return caught_negative.sum() / real_neg.sum()
