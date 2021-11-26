@@ -238,5 +238,7 @@ class BinaryPrediction(Prediction):
                 "Specificity": self.specificity,
                 "Positive PV": self.positive_predictive_value,
                 "Negative PV": self.negative_predictive_value,
-            }
-        )
+            },
+            index=["Value"],
+        ).transpose()
+        return basic_info.append(new_info)

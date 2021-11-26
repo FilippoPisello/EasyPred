@@ -1,5 +1,5 @@
 """Contains the generic Prediction. This class represents any kind of prediction
-interpreted as fitted array X attempting to be close to real array Y.
+interpreted as fitted array Y' attempting to be close to real array Y.
 
 The Prediction class allows to compute some metrics concerning the accuracy
 without needing to know how the prediction was computed.
@@ -112,6 +112,21 @@ class Prediction:
             "Prediction Matches": self.matches(),
         }
         return pd.DataFrame(data)
+
+    def describe(self) -> pd.DataFrame:
+        """Return a dataframe containing some key information about the
+        prediction."""
+        return self._describe()
+
+    def _describe(self) -> pd.DataFrame:
+        """Return some basic metrics for the prediction."""
+        n = len(self)
+        matches = self.matches().sum()
+        errors = n - matches
+        return pd.DataFrame(
+            {"N": [n], "Matches": [matches], "Errors": [errors], "PCC": [self.pcc]},
+            index=["Value"],
+        ).transpose()
 
     def to_binary(self, value_positive: Any):
         """Create an instance of BinaryPrediction.

@@ -100,3 +100,10 @@ class TestPrediction(TestCase):
             }
         )
         pd.testing.assert_frame_equal(p1.as_dataframe(), exp, check_dtype=False)
+
+    def test_describe(self):
+        """Test if description info is returned correctly."""
+        exp = pd.DataFrame(
+            {"N": [3], "Matches": [3], "Errors": [0], "PCC": [1]}, index=["Value"]
+        ).transpose()
+        pd.testing.assert_frame_equal(self.pred_l1l2.describe(), exp, check_dtype=False)

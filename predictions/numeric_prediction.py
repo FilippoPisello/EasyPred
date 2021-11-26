@@ -134,3 +134,18 @@ class NumericPrediction(Prediction):
             "Relative Difference": residuals / self.real_values,
         }
         return pd.DataFrame(data)
+
+    def describe(self) -> pd.DataFrame:
+        """Return a dataframe containing some key information about the
+        prediction."""
+        return pd.DataFrame(
+            {
+                "N": [len(self)],
+                "MSE": self.mse,
+                "RMSE": self.rmse,
+                "MAE": self.mae,
+                "MAPE": self.mape,
+                "R^2": self.r_squared,
+            },
+            index=["Value"],
+        ).transpose()
