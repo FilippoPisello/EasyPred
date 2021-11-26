@@ -35,3 +35,6 @@ class TestBinaryPrediction(TestCase):
         self.assertEqual(self.p1.false_negative_rate, (31 / (31 + 131)))
         self.assertEqual(self.p1.sensitivity, (131 / (31 + 131)))
         self.assertEqual(self.p1.specificity, (308 / (30 + 308)))
+
+        # Test aliases
+        self.assertEqual(self.p1.sensitivity, self.p1.recall)

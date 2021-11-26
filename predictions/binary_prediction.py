@@ -40,6 +40,8 @@ class BinaryPrediction(Prediction):
         and real value coincide.
     pcc: float
         Alias for percentage_correctly_classified.
+    recall : float
+        Alias for sensitivity.
     sensitivity : float
         The ratio between the correctly predicted positive and the total number
         of real positive. It measures how good the model is at detecting
@@ -104,6 +106,8 @@ class BinaryPrediction(Prediction):
         total number of real positives.
 
         It measures how good the model is in detecting real positives."""
+    # Defyining Alias
+    recall = sensitivity
 
     @property
     def specificity(self):
