@@ -8,7 +8,7 @@ from typing import Any, Union
 import numpy as np
 import pandas as pd
 
-from predictions import Prediction
+from easypred import Prediction
 
 
 class BinaryPrediction(Prediction):

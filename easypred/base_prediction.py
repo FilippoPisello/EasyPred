@@ -144,7 +144,7 @@ class Prediction:
             An object of type BinaryPrediction, a subclass of Prediction specific
             for predictions with just two outcomes.
         """
-        from predictions import BinaryPrediction
+        from easypred import BinaryPrediction
 
         return BinaryPrediction(
             fitted_values=self.fitted_values,

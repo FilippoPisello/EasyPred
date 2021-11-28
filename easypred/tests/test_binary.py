@@ -2,11 +2,11 @@ from unittest import TestCase
 
 import numpy as np
 import pandas as pd
-from predictions import BinaryPrediction
+from easypred import BinaryPrediction
 
 
 class TestBinaryPrediction(TestCase):
-    df = pd.read_excel("predictions/tests/test_data/binary.xlsx")
+    df = pd.read_excel("easypred/tests/test_data/binary.xlsx")
     p1 = BinaryPrediction(df["Real"], df["Fitted"], value_positive=1)
 
     def test_value_negative(self):

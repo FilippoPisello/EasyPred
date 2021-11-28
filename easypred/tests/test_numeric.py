@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 import pandas as pd
-from predictions import NumericPrediction
+from easypred import NumericPrediction
 
 
 class TestNumericPrediction(TestCase):
