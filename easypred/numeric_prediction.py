@@ -7,6 +7,9 @@ from typing import Union
 
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 
 from easypred import Prediction
 
@@ -125,3 +128,110 @@ class NumericPrediction(Prediction):
             },
             index=["Value"],
         ).transpose()
+
+    def residuals_plot(
+        self,
+        figsize: tuple[int, int] = (20, 10),
+        hline: Union[int, None] = 0,
+        title_size: int = 14,
+        axes_labels_size: int = 12,
+        return_plot: bool = False,
+    ) -> Union[None, tuple[Figure, Axes]]:
+        """Plot the scatterplot depicting the residuals against fitted values.
+
+        Parameters
+        ----------
+        figsize : tuple[int, int], optional
+            Tuple of integers specifying the size of the plot. Default is
+            (20, 10).
+        hline : int, optional
+            Y coordinate of the red dashed line added to the scatterplot. If
+            None, no line is drawn. By default is 0.
+        title_size : int, optional
+            Font size of the plot title. Default is 14.
+        axes_labels_size : int, optional
+            Font size of the axes labels. Default is 12.
+        return_plot : bool, optional
+            If True, the plot is not shown and a tuple of type (fig, ax) is
+            returned to the user. Use this option if you need more
+            personalization for the graph so that you will be able to modify it.
+            Default is False.
+
+        Returns
+        -------
+        Union[None, tuple[fig, ax]]:
+            If return_plot is False, None is returned. Otherwise, the plot is
+            not displayed and a tuple containing the figure and axes matplotlib
+            object is returned.
+        """
+        fig, ax = plt.subplots(figsize=figsize)
+
+        ax.scatter(self.fitted_values, self.residuals())
+
+        if hline is not None:
+            ax.axhline(0, c="red", ls="--")
+
+        ax.set_title("Residuals against fitted values", fontsize=title_size)
+        ax.set_xlabel("Fitted values", fontsize=axes_labels_size)
+        ax.set_ylabel("Residuals", fontsize=axes_labels_size)
+
+        ax.grid(True, ls="--")
+
+        if return_plot:
+            return (fig, ax)
+        plt.show()
+        return None
+
+    def fit_plot(
+        self,
+        figsize: tuple[int, int] = (20, 10),
+        line_slope: Union[int, None] = 0,
+        title_size: int = 14,
+        axes_labels_size: int = 12,
+        return_plot: bool = False,
+    ) -> Union[None, tuple[Figure, Axes]]:
+        """Plot the scatterplot depicting real against fitted values.
+
+        Parameters
+        ----------
+        figsize : tuple[int, int], optional
+            Tuple of integers specifying the size of the plot. Default is
+            (20, 10).
+        line_slope : Union[int, None], optional
+            Slope of the red dashed line added to the scatterplot. If None, no
+            line is drawn. By default is 1, representing parity between real
+            and fitted values.
+        title_size : int, optional
+            Font size of the plot title. Default is 14.
+        axes_labels_size : int, optional
+            Font size of the axes labels. Default is 12.
+        return_plot : bool, optional
+            If True, the plot is not shown and a tuple of type (fig, ax) is
+            returned to the user. Use this option if you need more
+            personalization for the graph so that you will be able to modify it.
+            Default is False.
+
+        Returns
+        -------
+        Union[None, tuple[fig, ax]]:
+            If return_plot is False, None is returned. Otherwise, the plot is
+            not displayed and a tuple containing the figure and axes matplotlib
+            object is returned.
+        """
+        fig, ax = plt.subplots(figsize=figsize)
+
+        ax.scatter(self.fitted_values, self.real_values)
+
+        if line_slope is not None:
+            ax.axline((0, 0), slope=line_slope, c="red", ls="--")
+
+        ax.set_title("Real against fitted values", fontsize=title_size)
+        ax.set_xlabel("Fitted values", fontsize=axes_labels_size)
+        ax.set_ylabel("Real values", fontsize=axes_labels_size)
+
+        ax.grid(True, ls="--")
+
+        if return_plot:
+            return (fig, ax)
+        plt.show()
+        return None
