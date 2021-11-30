@@ -24,44 +24,6 @@ class BinaryPrediction(Prediction):
         The value in the data that corresponds to 1 in the boolean logic.
         It is generally associated with the idea of "positive" or being in
         the "treatment" group. By default is 1.
-
-    Properties
-    -------
-    false_negative_rate : float
-        Ratio between the number of wrongly predicted negative and the total
-        number of positives. It tells the percentage of positives falsely
-        classified as negative.
-    false_positive_rate : float
-        Ratio between the number of wrongly predicted positive and the total
-        number of negatives. It tells the percentage of negatives falsely
-        classified as positive.
-    negative_predicted_value : float
-        Ratio between the number of correctly classified negative and the total
-        number of predicted negative. It measures how accurate the negative
-        predictions are.
-    percentage_correctly_classified: float
-        The decimal representing the percentage of elements for which fitted
-        and real value coincide.
-    pcc: float
-        Alias for percentage_correctly_classified.
-    positive_predicted_value : float
-        The ratio between the number of correctly predicted positives
-        and the total number predicted positives. It measures how accurate the
-        positive predictions are.
-    precision : float
-        Alias fo positive_predicted_value.
-    recall : float
-        Alias for sensitivity.
-    sensitivity : float
-        The ratio between the correctly predicted positive and the total number
-        of real positive. It measures how good the model is at detecting
-        positives. Aliased as "recall".
-    specificity : float
-        The ratio between the correctly predicted negative and the total number
-        of real negative. It measures how good the model is at detecting
-        negatives.
-    value_negative : Any
-        The value that it is not the positive value.
     """
 
     def __init__(

@@ -1,10 +1,17 @@
-easypred package
+Content docs
 ================
 
-Submodules
-----------
+Prediction Classes
+------------------
+At the moment there are three types of prediction objects implemented:
 
-easypred.base\_prediction module
+*  **Prediction**: an object with limited and general properties that is designed to fit any prediction.
+*  **BinaryPrediction**: an object with properties specific for cases where fitted and real data attain only two values.
+*  **NumericPrediction**: an object with properties specific for cases where fitted and real values are numeric.
+
+Find the content related to each of the modules.
+
+Prediction
 --------------------------------
 
 .. automodule:: easypred.base_prediction
@@ -12,26 +19,20 @@ easypred.base\_prediction module
    :undoc-members:
    :show-inheritance:
 
-easypred.binary\_prediction module
+BinaryPrediction
 ----------------------------------
 
 .. automodule:: easypred.binary_prediction
    :members:
    :undoc-members:
    :show-inheritance:
+   :inherited-members:
 
-easypred.numeric\_prediction module
+NumericPrediction
 -----------------------------------
 
 .. automodule:: easypred.numeric_prediction
    :members:
    :undoc-members:
    :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: easypred
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   :inherited-members:

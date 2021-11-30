@@ -20,30 +20,6 @@ class NumericPrediction(Prediction):
         The array-like object containing the N real values.
     fitted_values: Union[np.ndarray, pd.Series, list]
         The array-like object of length N containing the fitted values.
-
-    Properties
-    -------
-    mae : float
-        Mean Absolute Error. Measure of error calculated as the sum of the
-        absolute value residuals, divided by the number of observations.
-    mape : float
-        Mean Absolute Percentage Error. Measure of error calculated as the sum
-        of the absolute value relative residuals, divided by the number of
-        observations. The value is a float between 0 and 1.
-    mse : float
-        Mean Squared Error. Measure of error calculated as the sum of the
-        squared residuals, divided by the number of observations.
-    percentage_correctly_classified : float
-        The decimal representing the percentage of elements for which fitted
-        and real value coincide.
-    pcc : float
-        Alias for percentage_correctly_classified.
-    rmse : float
-        Root Mean Squared Error. It is the square root of the mse.
-    r_squared : float
-        R squared coefficient calculated as the square of the correlation
-        coefficient between fitted and real values. The value is a float between
-        0 and 1.
     """
 
     @property

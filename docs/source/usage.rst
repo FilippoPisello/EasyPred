@@ -23,6 +23,13 @@ And then run ``setup.py``
 
     python setup.py install
 
+Requirements
+~~~~~~~~~~~~~~~
+EasyPred depends on the following libraries:
+
+*  NumPy
+*  pandas
+
 Usage
 ~~~~~
 

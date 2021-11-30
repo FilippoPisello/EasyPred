@@ -17,19 +17,11 @@ class Prediction:
     """Class to represent a generic prediction.
 
     Attributes
-    -------
+    ----------
     real_values : Union[np.ndarray, pd.Series, list]
         The array-like object containing the N real values.
     fitted_values : Union[np.ndarray, pd.Series, list]
         The array-like object of length N containing the fitted values.
-
-    Properties
-    -------
-    percentage_correctly_classified : float
-        The decimal representing the percentage of elements for which fitted
-        and real value coincide.
-    pcc : float
-        Alias for percentage_correctly_classified.
     """
 
     def __init__(
