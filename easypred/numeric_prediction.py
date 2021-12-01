@@ -130,13 +130,14 @@ class NumericPrediction(Prediction):
         ).transpose()
 
     def residuals_plot(
+    def plot_residuals(
         self,
         figsize: tuple[int, int] = (20, 10),
         hline: Union[int, None] = 0,
         title_size: int = 14,
         axes_labels_size: int = 12,
-        return_plot: bool = False,
-    ) -> Union[None, tuple[Figure, Axes]]:
+        ax: Union[None, Axes] = None,
+    ) -> None:
         """Plot the scatterplot depicting the residuals against fitted values.
 
         Parameters
@@ -151,20 +152,18 @@ class NumericPrediction(Prediction):
             Font size of the plot title. Default is 14.
         axes_labels_size : int, optional
             Font size of the axes labels. Default is 12.
-        return_plot : bool, optional
-            If True, the plot is not shown and a tuple of type (fig, ax) is
-            returned to the user. Use this option if you need more
-            personalization for the graph so that you will be able to modify it.
-            Default is False.
+        ax : matplotlib Axes, optional
+            Axes object to draw the plot onto, otherwise creates new Figure
+            and Axes. Use this option to further customize the plot.
 
         Returns
         -------
-        Union[None, tuple[fig, ax]]:
-            If return_plot is False, None is returned. Otherwise, the plot is
-            not displayed and a tuple containing the figure and axes matplotlib
-            object is returned.
+        None
         """
-        fig, ax = plt.subplots(figsize=figsize)
+        default_ax = False
+        if ax is None:
+            default_ax = True
+            _, ax = plt.subplots(figsize=figsize)
 
         ax.scatter(self.fitted_values, self.residuals())
 
@@ -177,18 +176,16 @@ class NumericPrediction(Prediction):
 
         ax.grid(True, ls="--")
 
-        if return_plot:
-            return (fig, ax)
-        plt.show()
-        return None
+        if default_ax:
+            plt.show()
 
-    def fit_plot(
+    def plot_fit(
         self,
         figsize: tuple[int, int] = (20, 10),
-        line_slope: Union[int, None] = 0,
+        line_slope: Union[int, None] = 1,
         title_size: int = 14,
         axes_labels_size: int = 12,
-        return_plot: bool = False,
+        ax: Union[None, Axes] = None,
     ) -> Union[None, tuple[Figure, Axes]]:
         """Plot the scatterplot depicting real against fitted values.
 
@@ -205,20 +202,18 @@ class NumericPrediction(Prediction):
             Font size of the plot title. Default is 14.
         axes_labels_size : int, optional
             Font size of the axes labels. Default is 12.
-        return_plot : bool, optional
-            If True, the plot is not shown and a tuple of type (fig, ax) is
-            returned to the user. Use this option if you need more
-            personalization for the graph so that you will be able to modify it.
-            Default is False.
+        ax : matplotlib Axes, optional
+            Axes object to draw the plot onto, otherwise creates new Figure
+            and Axes. Use this option to further customize the plot.
 
         Returns
         -------
-        Union[None, tuple[fig, ax]]:
-            If return_plot is False, None is returned. Otherwise, the plot is
-            not displayed and a tuple containing the figure and axes matplotlib
-            object is returned.
+        None
         """
-        fig, ax = plt.subplots(figsize=figsize)
+        default_ax = False
+        if ax is None:
+            default_ax = True
+            _, ax = plt.subplots(figsize=figsize)
 
         ax.scatter(self.fitted_values, self.real_values)
 
@@ -231,7 +226,5 @@ class NumericPrediction(Prediction):
 
         ax.grid(True, ls="--")
 
-        if return_plot:
-            return (fig, ax)
-        plt.show()
-        return None
+        if default_ax:
+            plt.show()
