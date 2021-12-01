@@ -129,7 +129,54 @@ class NumericPrediction(Prediction):
             index=["Value"],
         ).transpose()
 
-    def residuals_plot(
+    def plot_fit_residuals(
+        self,
+        figsize: tuple[int, int] = (20, 10),
+        title_size: int = 14,
+        axes_labels_size: int = 12,
+        axs: Union[None, list[Axes]] = None,
+    ) -> None:
+        """Plot a two panels figure containing the plot of real against fitted
+        values and the plot of residuals against fitted values.
+
+        These two graphs are useful in detecting potential biases in the
+        prediction as they allow to detect deviations and clusters in the
+        prediction.
+
+        Parameters
+        ----------
+        figsize : tuple[int, int], optional
+            Tuple of integers specifying the size of the plot. Default is
+            (20, 10).
+        title_size : int, optional
+            Font size of the plots' titles. Default is 14.
+        axes_labels_size : int, optional
+            Font size of the axes labels. Default is 12.
+        axs : list of matplotlib Axes, optional
+            List of axes object of length 2 to draw the plot onto. Otherwise
+            creates new Figure and Axes. Use this option to further customize ù
+            the plot.
+
+        Returns
+        -------
+        None
+        """
+        default_ax = False
+        if axs is None:
+            default_ax = True
+            _, axs = plt.subplots(nrows=1, ncols=2, figsize=figsize)
+            print(axs)
+
+        self.plot_fit(
+            title_size=title_size, axes_labels_size=axes_labels_size, ax=axs[0]
+        )
+        self.plot_residuals(
+            title_size=title_size, axes_labels_size=axes_labels_size, ax=axs[1]
+        )
+
+        if default_ax:
+            plt.show()
+
     def plot_residuals(
         self,
         figsize: tuple[int, int] = (20, 10),
