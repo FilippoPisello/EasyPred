@@ -132,6 +132,7 @@ Use the `help()` function to get more information over the prediction objects an
 EasyPred depends on the following libraries:
 - NumPy
 - pandas
+- matplotlib
 
 ## License
 [MIT](LICENSE)
