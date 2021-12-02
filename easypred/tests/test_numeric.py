@@ -86,3 +86,21 @@ class TestNumericPrediction(TestCase):
         self.assertAlmostEqual(0.916369, p1.mape, places=5)
         # R^2
         self.assertAlmostEqual(0.005354, p1.r_squared, places=5)
+
+    def test_graphs(self):
+        """There is not much that can be done for graphs, so it is tested for
+        no exceptions raised"""
+        try:
+            self.pred_l1l2.plot_fit(show_plot=False)
+        except Exception as e:
+            self.fail("The following exception was raised: {e}")
+
+        try:
+            self.pred_l1l2.plot_residuals(show_plot=False)
+        except Exception as e:
+            self.fail("The following exception was raised: {e}")
+
+        try:
+            self.pred_l1l2.plot_fit_residuals(show_plot=False)
+        except Exception as e:
+            self.fail("The following exception was raised: {e}")

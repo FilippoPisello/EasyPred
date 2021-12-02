@@ -135,9 +135,12 @@ class NumericPrediction(Prediction):
         title_size: int = 14,
         axes_labels_size: int = 12,
         axs: Union[None, list[Axes]] = None,
+        show_plot: bool = True,
     ) -> None:
         """Plot a two panels figure containing the plot of real against fitted
         values and the plot of residuals against fitted values.
+
+        This method combines plot_fit and plot_residuals.
 
         These two graphs are useful in detecting potential biases in the
         prediction as they allow to detect deviations and clusters in the
@@ -156,6 +159,9 @@ class NumericPrediction(Prediction):
             List of axes object of length 2 to draw the plot onto. Otherwise
             creates new Figure and Axes. Use this option to further customize ù
             the plot.
+        show_plot : bool, optional
+            If True, plot is showed using plt.show() from matplotlib. Used for
+            testing purposes.
 
         Returns
         -------
@@ -174,7 +180,7 @@ class NumericPrediction(Prediction):
             title_size=title_size, axes_labels_size=axes_labels_size, ax=axs[1]
         )
 
-        if default_ax:
+        if default_ax & show_plot:
             plt.show()
 
     def plot_residuals(
@@ -184,6 +190,7 @@ class NumericPrediction(Prediction):
         title_size: int = 14,
         axes_labels_size: int = 12,
         ax: Union[None, Axes] = None,
+        show_plot: bool = True,
     ) -> None:
         """Plot the scatterplot depicting the residuals against fitted values.
 
@@ -202,6 +209,9 @@ class NumericPrediction(Prediction):
         ax : matplotlib Axes, optional
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
+        show_plot : bool, optional
+            If True, plot is showed using plt.show() from matplotlib. Used for
+            testing purposes.
 
         Returns
         -------
@@ -223,7 +233,7 @@ class NumericPrediction(Prediction):
 
         ax.grid(True, ls="--")
 
-        if default_ax:
+        if default_ax & show_plot:
             plt.show()
 
     def plot_fit(
@@ -233,7 +243,8 @@ class NumericPrediction(Prediction):
         title_size: int = 14,
         axes_labels_size: int = 12,
         ax: Union[None, Axes] = None,
-    ) -> Union[None, tuple[Figure, Axes]]:
+        show_plot: bool = True,
+    ) -> None:
         """Plot the scatterplot depicting real against fitted values.
 
         Parameters
@@ -252,6 +263,9 @@ class NumericPrediction(Prediction):
         ax : matplotlib Axes, optional
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
+        show_plot : bool, optional
+            If True, plot is showed using plt.show() from matplotlib. Used for
+            testing purposes.
 
         Returns
         -------
@@ -273,5 +287,5 @@ class NumericPrediction(Prediction):
 
         ax.grid(True, ls="--")
 
-        if default_ax:
+        if default_ax & show_plot:
             plt.show()
