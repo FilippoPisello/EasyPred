@@ -77,11 +77,6 @@ class Prediction:
         return self.fitted_values != other.fitted_values
 
     @property
-    def is_numeric(self) -> bool:
-        """Return True if fitted values are numeric, False otherwise."""
-        return pd.api.types.is_numeric_dtype(self.fitted_values)
-
-    @property
     def percentage_correctly_classified(self) -> float:
         """Return a float representing the percent of items which are equal
         between the real and the fitted values."""
