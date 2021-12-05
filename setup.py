@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="easypred",
-    version="0.0.4",
+    version="0.0.6",
     description="Easily store, assess and compare predictions obtained through Machine Learning models.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -22,5 +22,5 @@ setup(
     ],
     packages=find_packages(exclude="tests"),
     include_package_data=True,
-    install_requires=["numpy>=1.2", "pandas>=1.20", "matplotlib>=3"],
+    install_requires=["numpy>=1.20", "pandas>=1.2", "matplotlib>=3"],
 )
