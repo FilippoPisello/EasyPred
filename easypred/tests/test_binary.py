@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 import pandas as pd
-from easypred import BinaryPrediction
+from easypred import BinaryPrediction, Prediction
 
 
 class TestBinaryPrediction(TestCase):
@@ -42,3 +42,12 @@ class TestBinaryPrediction(TestCase):
         # Test aliases
         self.assertEqual(self.p1.sensitivity, self.p1.recall)
         self.assertEqual(self.p1.positive_predictive_value, self.p1.precision)
+
+    def test_constructors(self):
+        real, fit = [0, 0, 1], [1, 0, 0]
+        pred = Prediction(real, fit)
+        bin_pred = BinaryPrediction.from_prediction(pred, 1)
+        self.assertIsInstance(bin_pred, BinaryPrediction)
+        np.testing.assert_array_equal(real, np.array(real))
+        np.testing.assert_array_equal(fit, np.array(fit))
+

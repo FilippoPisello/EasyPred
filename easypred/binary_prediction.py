@@ -204,3 +204,28 @@ class BinaryPrediction(Prediction):
             index=["Value"],
         ).transpose()
         return basic_info.append(new_info)
+
+    @classmethod
+    def from_prediction(cls, prediction: Prediction, value_positive):
+        """Create an instance of BinaryPrediction.
+
+        Parameters
+        ----------
+        prediction : Prediction
+            The prediction object the BinaryPrediction is to be constructed from.
+        value_positive : Any
+            The value in the data that corresponds to 1 in the boolean logic.
+            It is generally associated with the idea of "positive" or being in
+            the "treatment" group. By default is 1.
+
+        Returns
+        -------
+        BinaryPrediction
+            An object of type BinaryPrediction, a subclass of Prediction specific
+            for predictions with just two outcomes.
+        """
+        return cls(
+            fitted_values=prediction.fitted_values,
+            real_values=prediction.real_values,
+            value_positive=value_positive,
+        )

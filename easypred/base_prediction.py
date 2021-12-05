@@ -7,7 +7,7 @@ without needing to know how the prediction was computed.
 The subclasses allow for metrics that are relevant for just specific types
 of predictions."""
 
-from typing import Any, Union
+from typing import Union
 
 import numpy as np
 import pandas as pd
@@ -114,27 +114,3 @@ class Prediction:
             {"N": [n], "Matches": [matches], "Errors": [errors], "PCC": [self.pcc]},
             index=["Value"],
         ).transpose()
-
-    def to_binary(self, value_positive: Any):
-        """Create an instance of BinaryPrediction.
-
-        Parameters
-        ----------
-        value_positive : Any
-            The value in the data that corresponds to 1 in the boolean logic.
-            It is generally associated with the idea of "positive" or being in
-            the "treatment" group. By default is 1.
-
-        Returns
-        -------
-        BinaryPrediction
-            An object of type BinaryPrediction, a subclass of Prediction specific
-            for predictions with just two outcomes.
-        """
-        from easypred import BinaryPrediction
-
-        return BinaryPrediction(
-            fitted_values=self.fitted_values,
-            real_values=self.real_values,
-            value_positive=value_positive,
-        )

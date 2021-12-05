@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import numpy as np
 import pandas as pd
-from easypred import BinaryPrediction, Prediction
+from easypred import Prediction
 
 
 class TestPrediction(TestCase):
@@ -48,13 +48,6 @@ class TestPrediction(TestCase):
         np.testing.assert_array_equal(self.pred_l1l2.fitted_values, self.a1)
         np.testing.assert_array_equal(self.pred_l1l2.real_values, self.a2)
 
-        # Check that being numeric is correctly detected
-        self.assertTrue(self.pred_l1l2.is_numeric)
-        self.assertTrue(self.pred_s1s2.is_numeric)
-        self.assertTrue(Prediction([0.1, 0.2], [0.1, 0.2]).is_numeric)
-
-        self.assertFalse(Prediction(np.array(self.l5), np.array(self.l5)).is_numeric)
-
     def test_is_correct(self):
         """Test if correctness check happens in the right way."""
         res1 = np.array([True, True, True])
@@ -81,13 +74,6 @@ class TestPrediction(TestCase):
         self.assertEqual(self.pred_l1l3.pcc, 2 / 3)
         self.assertEqual(self.pred_a1a3.pcc, 2 / 3)
         self.assertEqual(self.pred_s1s3.pcc, 2 / 3)
-
-    def test_makebinary(self):
-        """Test if binary prediction is created correctly."""
-        p1 = Prediction([0, 0, 1], [1, 0, 0])
-        p1 = p1.to_binary(value_positive=1)
-        self.assertIsInstance(p1, BinaryPrediction)
-        self.assertEqual(p1.value_positive, 1)
 
     def test_dataframe(self):
         """Test if dataframe is created correctly."""
