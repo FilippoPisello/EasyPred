@@ -3,6 +3,8 @@ a prediction where both the fitted and real data attain at most two different
 values.
 
 It allows to compute accuracy metrics like true positive, true negative, etc."""
+from __future__ import annotations
+
 from typing import Any, Union
 
 import numpy as np
@@ -206,7 +208,9 @@ class BinaryPrediction(Prediction):
         return basic_info.append(new_info)
 
     @classmethod
-    def from_prediction(cls, prediction: Prediction, value_positive):
+    def from_prediction(
+        cls, prediction: Prediction, value_positive
+    ) -> BinaryPrediction:
         """Create an instance of BinaryPrediction.
 
         Parameters
