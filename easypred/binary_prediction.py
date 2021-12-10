@@ -8,7 +8,7 @@ from typing import Any, Union
 import numpy as np
 import pandas as pd
 
-from easypred import Prediction
+from easypred import BinaryScore, Prediction
 
 
 class BinaryPrediction(Prediction):
@@ -228,4 +228,15 @@ class BinaryPrediction(Prediction):
             fitted_values=prediction.fitted_values,
             real_values=prediction.real_values,
             value_positive=value_positive,
+        )
+
+    @classmethod
+    def from_binary_score(
+        cls, binary_score: BinaryScore, threshold: float = 0.5
+    ) -> BinaryPrediction:
+        fitted_values = (binary_score.fitted_scores >= threshold).astype(int)
+        return cls(
+            real_values=binary_score.real_values,
+            fitted_values=fitted_values,
+            value_positive=binary_score.value_positive,
         )
