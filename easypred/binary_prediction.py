@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from easypred import Prediction
+from easypred.type_aliases import VectorPdNp
 
 
 class BinaryPrediction(Prediction):
@@ -61,19 +62,19 @@ class BinaryPrediction(Prediction):
         return other_only.reset_index(drop=True)[0]
 
     @property
-    def _pred_pos(self) -> Union[np.ndarray, pd.Series]:
+    def _pred_pos(self) -> VectorPdNp:
         return self.fitted_values == self.value_positive
 
     @property
-    def _pred_neg(self) -> Union[np.ndarray, pd.Series]:
+    def _pred_neg(self) -> VectorPdNp:
         return self.fitted_values == self.value_negative
 
     @property
-    def _real_pos(self) -> Union[np.ndarray, pd.Series]:
+    def _real_pos(self) -> VectorPdNp:
         return self.real_values == self.value_positive
 
     @property
-    def _real_neg(self) -> Union[np.ndarray, pd.Series]:
+    def _real_neg(self) -> VectorPdNp:
         return self.real_values == self.value_negative
 
     @property

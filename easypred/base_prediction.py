@@ -12,6 +12,8 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
+from easypred.type_aliases import VectorPdNp
+
 
 class Prediction:
     """Class to represent a generic prediction.
@@ -85,7 +87,7 @@ class Prediction:
     # DEFYINING ALIAS
     pcc = percentage_correctly_classified
 
-    def matches(self) -> Union[np.ndarray, pd.Series]:
+    def matches(self) -> VectorPdNp:
         """Return a boolean array of length N with True where fitted value is
         equal to real value."""
         return self.real_values == self.fitted_values

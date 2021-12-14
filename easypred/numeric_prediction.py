@@ -12,6 +12,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from easypred import Prediction
+from easypred.type_aliases import VectorPdNp
 
 
 class NumericPrediction(Prediction):
@@ -66,7 +67,7 @@ class NumericPrediction(Prediction):
         squared: bool = False,
         absolute: bool = False,
         relative: bool = False,
-    ) -> Union[np.ndarray, pd.Series]:
+    ) -> VectorPdNp:
         """Return an array with the difference between the real values and the
         fitted values.
 
@@ -82,7 +83,7 @@ class NumericPrediction(Prediction):
 
         Returns
         -------
-        Union[np.ndarray, pd.Series]
+        np.ndarray or pd.Series
             Numpy array or pandas series depending on the type of real_values and
             fitted_values. Its shape is (N,).
         """
@@ -95,7 +96,7 @@ class NumericPrediction(Prediction):
             return abs(residuals)
         return residuals
 
-    def matches_tolerance(self, tolerance: float = 0.0) -> Union[np.ndarray, pd.Series]:
+    def matches_tolerance(self, tolerance: float = 0.0) -> VectorPdNp:
         """Return a boolean array of length N with True where the distance
         between the real values and the fitted values is inferior to a
         given parameter."""
