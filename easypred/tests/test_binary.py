@@ -31,17 +31,16 @@ class TestBinaryPrediction(TestCase):
         pd.testing.assert_frame_equal(real, exp, check_dtype=False)
 
     def test_rates(self):
+        self.assertEqual(self.p1.balanced_accuracy_score, 0.8599422894294689)
         self.assertEqual(self.p1.false_positive_rate, (30 / (30 + 308)))
         self.assertEqual(self.p1.false_negative_rate, (31 / (31 + 131)))
-        self.assertEqual(self.p1.sensitivity, (131 / (31 + 131)))
-        self.assertEqual(self.p1.specificity, (308 / (30 + 308)))
+        self.assertEqual(self.p1.recall_score, (131 / (31 + 131)))
+        self.assertEqual(self.p1.specificity_score, (308 / (30 + 308)))
 
-        self.assertEqual(self.p1.positive_predictive_value, (131 / (30 + 131)))
+        self.assertEqual(self.p1.precision_score, (131 / (30 + 131)))
         self.assertEqual(self.p1.negative_predictive_value, (308 / (308 + 31)))
 
-        # Test aliases
-        self.assertEqual(self.p1.sensitivity, self.p1.recall)
-        self.assertEqual(self.p1.positive_predictive_value, self.p1.precision)
+        self.assertEqual(self.p1.f1_score, 0.8111455108359134)
 
     def test_constructors(self):
         real, fit = [0, 0, 1], [1, 0, 0]
@@ -50,4 +49,3 @@ class TestBinaryPrediction(TestCase):
         self.assertIsInstance(bin_pred, BinaryPrediction)
         np.testing.assert_array_equal(real, np.array(real))
         np.testing.assert_array_equal(fit, np.array(fit))
-

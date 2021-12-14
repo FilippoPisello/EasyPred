@@ -11,7 +11,6 @@ import numpy as np
 import pandas as pd
 
 from easypred import Prediction
-from easypred.type_aliases import VectorPdNp
 
 
 class BinaryPrediction(Prediction):
@@ -62,20 +61,17 @@ class BinaryPrediction(Prediction):
         return other_only.reset_index(drop=True)[0]
 
     @property
-    def _pred_pos(self) -> VectorPdNp:
-        return self.fitted_values == self.value_positive
+    def balanced_accuracy_score(self) -> float:
+        """Return the float representing the arithmetic mean between recall score
+        and specificity score.
 
-    @property
-    def _pred_neg(self) -> VectorPdNp:
-        return self.fitted_values == self.value_negative
+        It provides an idea of the goodness of the prediction in unbalanced datasets.
+        """
+        from easypred.metrics import balanced_accuracy_score
 
-    @property
-    def _real_pos(self) -> VectorPdNp:
-        return self.real_values == self.value_positive
-
-    @property
-    def _real_neg(self) -> VectorPdNp:
-        return self.real_values == self.value_negative
+        return balanced_accuracy_score(
+            self.real_values, self.fitted_values, self.value_positive
+        )
 
     @property
     def false_positive_rate(self) -> float:
@@ -83,8 +79,11 @@ class BinaryPrediction(Prediction):
         number of real negatives.
 
         It tells the percentage of negatives falsely classified as positive."""
-        false_positive = self._pred_pos & self._real_neg
-        return false_positive.sum() / self._real_neg.sum()
+        from easypred.metrics import false_positive_rate
+
+        return false_positive_rate(
+            self.real_values, self.fitted_values, self.value_positive
+        )
 
     @property
     def false_negative_rate(self):
@@ -92,41 +91,51 @@ class BinaryPrediction(Prediction):
         number of real positives.
 
         It tells the percentage of positives falsely classified as negative."""
-        false_negative = self._pred_neg & self._real_pos
-        return false_negative.sum() / self._real_pos.sum()
+        from easypred.metrics import false_negative_rate
+
+        return false_negative_rate(
+            self.real_values, self.fitted_values, self.value_positive
+        )
 
     @property
-    def sensitivity(self):
+    def recall_score(self):
         """Return the ratio between the correctly predicted positives and the
         total number of real positives.
 
-        It measures how good the model is in detecting real positives."""
-        caught_positive = self._pred_pos & self._real_pos
-        return caught_positive.sum() / self._real_pos.sum()
+        It measures how good the model is in detecting real positives.
 
-    # Defyining Alias
-    recall = sensitivity
+        Also called: sensitivity, true positive rate, hit rate."""
+        from easypred.metrics import recall_score
+
+        return recall_score(self.real_values, self.fitted_values, self.value_positive)
 
     @property
-    def specificity(self):
+    def specificity_score(self):
         """Return the ratio between the correctly predicted negatives and the
         total number of real negatives.
 
-        It measures how good the model is in detecting real negatives."""
-        caught_negative = self._pred_neg & self._real_neg
-        return caught_negative.sum() / self._real_neg.sum()
+        It measures how good the model is in detecting real negatives.
+
+        Also called: selectivity, true negative rate."""
+        from easypred.metrics import specificity_score
+
+        return specificity_score(
+            self.real_values, self.fitted_values, self.value_positive
+        )
 
     @property
-    def positive_predictive_value(self):
+    def precision_score(self):
         """Return the ratio between the number of correctly predicted positives
         and the total number predicted positives.
 
-        It measures how accurate the positive predictions are."""
-        caught_positive = self._pred_pos & self._real_pos
-        return caught_positive.sum() / self._pred_pos.sum()
+        It measures how accurate the positive predictions are.
 
-    # Defyining Alias
-    precision = positive_predictive_value
+        Also called: positive predicted value."""
+        from easypred.metrics import precision_score
+
+        return precision_score(
+            self.real_values, self.fitted_values, self.value_positive
+        )
 
     @property
     def negative_predictive_value(self):
@@ -134,8 +143,23 @@ class BinaryPrediction(Prediction):
         and the total number of predicted negative.
 
         It measures how accurate the negative predictions are."""
-        caught_negative = self._pred_neg & self._real_neg
-        return caught_negative.sum() / self._pred_neg.sum()
+        from easypred.metrics import negative_predictive_value
+
+        return negative_predictive_value(
+            self.real_values, self.fitted_values, self.value_positive
+        )
+
+    @property
+    def f1_score(self):
+        """Return the harmonic mean of the precision and recall.
+
+        It gives an idea of an overall goodness of your precision and recall taken
+        together.
+
+        Also called: balanced F-score or F-measure"""
+        from easypred.metrics import f1_score
+
+        return f1_score(self.real_values, self.fitted_values, self.value_positive)
 
     def confusion_matrix(
         self, relative: bool = False, as_dataframe: bool = False
@@ -199,10 +223,11 @@ class BinaryPrediction(Prediction):
         basic_info = self._describe()
         new_info = pd.DataFrame(
             {
-                "Sensitivity": self.sensitivity,
-                "Specificity": self.specificity,
-                "Positive PV": self.positive_predictive_value,
+                "Recall": self.recall_score,
+                "Specificity": self.specificity_score,
+                "Precision": self.precision_score,
                 "Negative PV": self.negative_predictive_value,
+                "F1 score": self.f1_score,
             },
             index=["Value"],
         ).transpose()
