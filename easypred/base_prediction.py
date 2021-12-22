@@ -73,10 +73,10 @@ class Prediction:
         return len(self.fitted_values)
 
     def __eq__(self, other):
-        return self.fitted_values == other.fitted_values
+        return np.all(self.fitted_values == other.fitted_values)
 
     def __ne__(self, other):
-        return self.fitted_values != other.fitted_values
+        return np.any(self.fitted_values != other.fitted_values)
 
     @property
     def percentage_correctly_classified(self) -> float:
