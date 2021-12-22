@@ -7,10 +7,13 @@ from easypred import BinaryPrediction, Prediction
 
 class TestBinaryPrediction(TestCase):
     df = pd.read_excel("easypred/tests/test_data/binary.xlsx")
-    p1 = BinaryPrediction(df["Real"], df["Fitted"], value_positive=1)
+    real, fitted = df["Real"], df["Fitted"]
+    p1 = BinaryPrediction(real, fitted, value_positive=1)
+    p2 = BinaryPrediction(real.to_numpy(), fitted.to_numpy(), value_positive=1)
 
     def test_value_negative(self):
         self.assertEqual(self.p1.value_negative, 0)
+        self.assertEqual(self.p2.value_negative, 0)
 
     def test_confusion_matrix(self):
         real = self.p1.confusion_matrix()
@@ -49,3 +52,20 @@ class TestBinaryPrediction(TestCase):
         self.assertIsInstance(bin_pred, BinaryPrediction)
         np.testing.assert_array_equal(real, np.array(real))
         np.testing.assert_array_equal(fit, np.array(fit))
+
+    def test_describe(self):
+        exp = pd.DataFrame(
+            {
+                "N": [len(self.p1)],
+                "Matches": [self.p1.matches().sum()],
+                "Errors": [len(self.p1) - self.p1.matches().sum()],
+                "PCC": [self.p1.percentage_correctly_classified],
+                "Recall": self.p1.recall_score,
+                "Specificity": self.p1.specificity_score,
+                "Precision": self.p1.precision_score,
+                "Negative PV": self.p1.negative_predictive_value,
+                "F1 score": self.p1.f1_score,
+            },
+            index=["Value"],
+        ).transpose()
+        pd.testing.assert_frame_equal(exp, self.p1.describe())
