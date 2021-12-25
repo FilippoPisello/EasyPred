@@ -23,7 +23,7 @@ def accuracy_score(real_values: VectorPdNp, fitted_values: VectorPdNp) -> float:
     float
         Accuracy score
 
-    Reference
+    References
     -------
     https://en.wikipedia.org/wiki/Accuracy_and_precision#In_binary_classification
     """
@@ -84,7 +84,7 @@ def false_positive_rate(
     float
         False positive rate
 
-    Reference
+    References
     ---------
     https://en.wikipedia.org/wiki/False_positive_rate"""
     pred_pos = fitted_values == value_positive
@@ -149,7 +149,7 @@ def precision_score(
     float
         Precision score
 
-    Reference
+    References
     ---------
     https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values"""
     pred_pos = fitted_values == value_positive
@@ -181,7 +181,7 @@ def negative_predictive_value(
     float
         Negative predictive value
 
-    Reference
+    References
     ---------
     https://en.wikipedia.org/wiki/Positive_and_negative_predictive_values"""
     pred_neg = fitted_values != value_positive
@@ -215,7 +215,7 @@ def recall_score(
     float
         Recall score
 
-    Reference
+    References
     --------
     https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Sensitivity"""
     pred_pos = fitted_values == value_positive
@@ -249,7 +249,7 @@ def specificity_score(
     float
         Specificity score
 
-    Reference
+    References
     ---------
     https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Specificity"""
     pred_neg = fitted_values != value_positive
@@ -283,7 +283,7 @@ def f1_score(
     float
         F1 score
 
-    Reference
+    References
     ---------
     https://en.wikipedia.org/wiki/F-score"""
     precision = precision_score(real_values, fitted_values, value_positive)

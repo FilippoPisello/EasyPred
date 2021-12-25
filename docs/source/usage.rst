@@ -55,7 +55,7 @@ Let's check the rate of correctly classified observations:
 
 .. code:: python
 
-    >>> pred.pcc
+    >>> pred.accuracy_score
     0.2
 
 More detail is needed, let's investigate where predictions and real
@@ -100,9 +100,9 @@ sensitivity and specificity?
     0.0
     >>> bin_pred.false_negative_rate
     0.5
-    >>> bin_pred.sensitivity
+    >>> bin_pred.recall_score
     0.5
-    >>> bin_pred.specificity
+    >>> bin_pred.specificity_score
     1.0
 
 Let's look now at the confusion matrix as a pandas data frame:
@@ -139,14 +139,14 @@ The data frame representation has now more information:
 .. code:: python
 
     >>> num_pred.as_dataframe()
-       Fitted Values  Real Values  Prediction Matches  Absolute Difference  Relative Difference
-    0              1            1                True                    0             0.000000
-    1              2            2                True                    0             0.000000
-    2              4            3               False                   -1            -0.333333
-    3              3            4               False                    1             0.250000
-    4              7            5               False                   -2            -0.400000
-    5              2            6               False                    4             0.666667
-    6              5            7               False                    2             0.285714
+       Real Values  Fitted Values  Prediction Matches  Absolute Difference  Relative Difference
+    0            1              1                True                    0             0.000000
+    1            2              2                True                    0             0.000000
+    2            3              4               False                   -1            -0.333333
+    3            4              3               False                    1             0.250000
+    4            5              7               False                   -2            -0.400000
+    5            6              2               False                    4             0.666667
+    6            7              5               False                    2             0.285714
 
 There are then a number of dedicated error and accuracy metrics:
 

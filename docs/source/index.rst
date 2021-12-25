@@ -25,6 +25,7 @@ Why EasyPred can be useful:
 
    usage
    easypred
+   otherdocs
 
 Indices and tables
 ==================

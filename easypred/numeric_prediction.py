@@ -33,35 +33,45 @@ class NumericPrediction(Prediction):
         """Returns the r squared calculated as the square of the correlation
         coefficient. Also called 'Coefficient of Determination'.
 
-        ref: https://en.wikipedia.org/wiki/Coefficient_of_determination"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Coefficient_of_determination"""
         return np.corrcoef(self.real_values, self.fitted_values)[0, 1] ** 2
 
     @property
     def mse(self) -> float:
         """Return the Mean Squared Error.
 
-        ref: https://en.wikipedia.org/wiki/Mean_squared_error"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Mean_squared_error"""
         return np.mean(self.residuals(squared=True))
 
     @property
     def rmse(self) -> float:
         """Return the Root Mean Squared Error.
 
-        ref: https://en.wikipedia.org/wiki/Root-mean-square_deviation"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Root-mean-square_deviation"""
         return np.sqrt(self.mse)
 
     @property
     def mae(self) -> float:
         """Return the Mean Absolute Error.
 
-        ref: https://en.wikipedia.org/wiki/Mean_absolute_error"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Mean_absolute_error"""
         return np.mean(self.residuals(absolute=True))
 
     @property
     def mape(self) -> float:
         """Return the Mean Absolute Percentage Error.
 
-        ref: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Mean_absolute_percentage_error"""
         return np.mean(self.residuals(absolute=True, relative=True))
 
     def residuals(
