@@ -75,18 +75,13 @@ class TestPrediction(TestCase):
 
     def test_accuracy(self):
         """Test if accuracy is computed correctly."""
-        self.assertEqual(self.pred_l2l1.percentage_correctly_classified, 1)
-        self.assertEqual(self.pred_a1a2.percentage_correctly_classified, 1)
-        self.assertEqual(self.pred_s1s2.percentage_correctly_classified, 1)
+        self.assertEqual(self.pred_l2l1.accuracy_score, 1)
+        self.assertEqual(self.pred_a1a2.accuracy_score, 1)
+        self.assertEqual(self.pred_s1s2.accuracy_score, 1)
 
-        self.assertEqual(self.pred_l3l1.percentage_correctly_classified, 2 / 3)
-        self.assertEqual(self.pred_a1a3.percentage_correctly_classified, 2 / 3)
-        self.assertEqual(self.pred_s1s3.percentage_correctly_classified, 2 / 3)
-
-        # Test alias
-        self.assertEqual(self.pred_l3l1.pcc, 2 / 3)
-        self.assertEqual(self.pred_a1a3.pcc, 2 / 3)
-        self.assertEqual(self.pred_s1s3.pcc, 2 / 3)
+        self.assertEqual(self.pred_l3l1.accuracy_score, 2 / 3)
+        self.assertEqual(self.pred_a1a3.accuracy_score, 2 / 3)
+        self.assertEqual(self.pred_s1s3.accuracy_score, 2 / 3)
 
     def test_dataframe(self):
         """Test if dataframe is created correctly."""
@@ -103,6 +98,6 @@ class TestPrediction(TestCase):
     def test_describe(self):
         """Test if description info is returned correctly."""
         exp = pd.DataFrame(
-            {"N": [3], "Matches": [3], "Errors": [0], "PCC": [1]}, index=["Value"]
+            {"N": [3], "Matches": [3], "Errors": [0], "Accuracy": [1]}, index=["Value"]
         ).transpose()
         pd.testing.assert_frame_equal(self.pred_l2l1.describe(), exp, check_dtype=False)

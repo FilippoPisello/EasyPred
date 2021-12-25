@@ -1,5 +1,5 @@
-# EasyPred: simply track your predictions
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/release/python-380/)
+# EasyPred: track your predictions with ease
+[![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/release/python-370/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![GitHub license](https://badgen.net/github/license/FilippoPisello/EasyPred)](https://github.com/FilippoPisello/EasyPred/blob/main/LICENSE)
 [![PyPI version fury.io](https://badge.fury.io/py/easypred.svg)](https://pypi.org/project/easypred/)
@@ -44,7 +44,7 @@ Consider the example of a generic prediction over text categories:
 ```
 Let's check the rate of correctly classified observations:
 ```python
->>> pred.pcc
+>>> pred.accuracy_score
 0.2
 ```
 More detail is needed, let's investigate where predictions and real match:
@@ -76,9 +76,9 @@ What are the false positive and false negative rates? What about sensitivity and
 0.0
 >>> bin_pred.false_negative_rate
 0.5
->>> bin_pred.sensitivity
+>>> bin_pred.recall_score
 0.5
->>> bin_pred.specificity
+>>> bin_pred.specificity_score
 1.0
 ```
 Let's look now at the confusion matrix as a pandas data frame:

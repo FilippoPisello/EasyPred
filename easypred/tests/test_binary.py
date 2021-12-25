@@ -59,7 +59,7 @@ class TestBinaryPrediction(TestCase):
                 "N": [len(self.p1)],
                 "Matches": [self.p1.matches().sum()],
                 "Errors": [len(self.p1) - self.p1.matches().sum()],
-                "PCC": [self.p1.percentage_correctly_classified],
+                "Accuracy": [self.p1.accuracy_score],
                 "Recall": self.p1.recall_score,
                 "Specificity": self.p1.specificity_score,
                 "Precision": self.p1.precision_score,
