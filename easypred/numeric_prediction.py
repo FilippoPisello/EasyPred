@@ -3,6 +3,8 @@ a prediction where both fitted and real data are either ints or floats.
 
 It allows to compute accuracy metrics that represent the distance between
 the prediction and the real values."""
+from __future__ import annotations
+
 from typing import Union
 
 import numpy as np
