@@ -66,3 +66,59 @@ class BinaryScore:
             self.value_positive,
             self.value_negative,
         )
+
+    @property
+    def accuracy_scores(self) -> np.ndarray:
+        """Return an array containing the accuracy scores calculated setting the
+        threshold for each unique score value."""
+        from easypred.metrics import accuracy_score
+
+        return self._metric_array(accuracy_score)
+
+    @property
+    def false_positive_rates(self) -> np.ndarray:
+        """Return an array containing the false positive rates calculated
+        setting the threshold for each unique score value."""
+        from easypred.metrics import false_positive_rate
+
+        return self._metric_array(
+            false_positive_rate, value_positive=self.value_positive
+        )
+
+    @property
+    def recall_scores(self) -> np.ndarray:
+        """Return an array containing the recall scores calculated setting the
+        threshold for each unique score value."""
+        from easypred.metrics import recall_score
+
+        return self._metric_array(recall_score, value_positive=self.value_positive)
+
+    def _metric_array(
+        self, metric_function: Callable[..., float], decimals: int = 3, **kwargs
+    ) -> np.ndarray:
+        """Return an array containing the passed metric calculated setting the
+        threshold for each unique score value.
+
+        Parameters
+        ----------
+        metric_function : Callable(VectorPdNp, VectorPdNp, ...) -> float
+            The function that calculates the metric.
+        decimals : int, optional
+            Thresholds correspond to the unique values of the fitted scores
+            after these are rounded to an arbitrary number of decimals in order
+            to speed up the operations. The number of decimals is regulated
+            through this parameter. By default 3.
+        **kwargs : Any
+            Arguments to be directly passed to metric_function.
+
+        Returns
+        -------
+        np.ndarray
+            The array containing the metrics calculated for each threshold.
+        """
+        return np.array(
+            [
+                metric_function(self.real_values, self.score_to_values(val), **kwargs)
+                for val in self.unique_scores(decimals=decimals)
+            ]
+        )
