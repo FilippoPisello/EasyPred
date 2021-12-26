@@ -2,12 +2,13 @@ from typing import Any
 
 import numpy as np
 
+from easypred.type_aliases import Vector, VectorPdNp
 
 class BinaryScore:
     def __init__(
         self,
-        real_values: np.ndarray,
-        fitted_scores: np.ndarray,
+        real_values: Vector,
+        fitted_scores: Vector,
         value_positive: Any = 1,
     ):
         self.real_values = real_values
