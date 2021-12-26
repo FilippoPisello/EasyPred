@@ -136,7 +136,7 @@ EasyPred depends on the following libraries:
 - matplotlib
 
 ## Documentation
-Find the complete documentation on [read the docs](https://easypred.readthedocs.io/en/latest/easypred.html).
+Find the complete documentation on [read the docs](https://easypred.readthedocs.io/en/latest/index.html).
 
 ## License
 [MIT](LICENSE)
