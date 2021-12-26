@@ -12,6 +12,8 @@ from typing import Union
 import numpy as np
 import pandas as pd
 
+from easypred.type_aliases import VectorPdNp
+
 
 class Prediction:
     """Class to represent a generic prediction.
@@ -71,21 +73,18 @@ class Prediction:
         return len(self.fitted_values)
 
     def __eq__(self, other):
-        return self.fitted_values == other.fitted_values
+        return np.all(self.fitted_values == other.fitted_values)
 
     def __ne__(self, other):
-        return self.fitted_values != other.fitted_values
+        return np.any(self.fitted_values != other.fitted_values)
 
     @property
-    def percentage_correctly_classified(self) -> float:
+    def accuracy_score(self) -> float:
         """Return a float representing the percent of items which are equal
         between the real and the fitted values."""
         return np.mean(self.real_values == self.fitted_values)
 
-    # DEFYINING ALIAS
-    pcc = percentage_correctly_classified
-
-    def matches(self) -> Union[np.ndarray, pd.Series]:
+    def matches(self) -> VectorPdNp:
         """Return a boolean array of length N with True where fitted value is
         equal to real value."""
         return self.real_values == self.fitted_values
@@ -111,6 +110,11 @@ class Prediction:
         matches = self.matches().sum()
         errors = n - matches
         return pd.DataFrame(
-            {"N": [n], "Matches": [matches], "Errors": [errors], "PCC": [self.pcc]},
+            {
+                "N": [n],
+                "Matches": [matches],
+                "Errors": [errors],
+                "Accuracy": [self.accuracy_score],
+            },
             index=["Value"],
         ).transpose()

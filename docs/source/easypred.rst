@@ -1,8 +1,5 @@
-Content docs
+Prediction Classes Docs
 ================
-
-Prediction Classes
-------------------
 At the moment there are three types of prediction objects implemented:
 
 *  **Prediction**: an object with limited and general properties that is designed to fit any prediction.

@@ -3,6 +3,8 @@ a prediction where both fitted and real data are either ints or floats.
 
 It allows to compute accuracy metrics that represent the distance between
 the prediction and the real values."""
+from __future__ import annotations
+
 from typing import Union
 
 import numpy as np
@@ -12,6 +14,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from easypred import Prediction
+from easypred.type_aliases import VectorPdNp
 
 
 class NumericPrediction(Prediction):
@@ -30,35 +33,45 @@ class NumericPrediction(Prediction):
         """Returns the r squared calculated as the square of the correlation
         coefficient. Also called 'Coefficient of Determination'.
 
-        ref: https://en.wikipedia.org/wiki/Coefficient_of_determination"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Coefficient_of_determination"""
         return np.corrcoef(self.real_values, self.fitted_values)[0, 1] ** 2
 
     @property
     def mse(self) -> float:
         """Return the Mean Squared Error.
 
-        ref: https://en.wikipedia.org/wiki/Mean_squared_error"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Mean_squared_error"""
         return np.mean(self.residuals(squared=True))
 
     @property
     def rmse(self) -> float:
         """Return the Root Mean Squared Error.
 
-        ref: https://en.wikipedia.org/wiki/Root-mean-square_deviation"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Root-mean-square_deviation"""
         return np.sqrt(self.mse)
 
     @property
     def mae(self) -> float:
         """Return the Mean Absolute Error.
 
-        ref: https://en.wikipedia.org/wiki/Mean_absolute_error"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Mean_absolute_error"""
         return np.mean(self.residuals(absolute=True))
 
     @property
     def mape(self) -> float:
         """Return the Mean Absolute Percentage Error.
 
-        ref: https://en.wikipedia.org/wiki/Mean_absolute_percentage_error"""
+        References
+        ---------
+        https://en.wikipedia.org/wiki/Mean_absolute_percentage_error"""
         return np.mean(self.residuals(absolute=True, relative=True))
 
     def residuals(
@@ -66,7 +79,7 @@ class NumericPrediction(Prediction):
         squared: bool = False,
         absolute: bool = False,
         relative: bool = False,
-    ) -> Union[np.ndarray, pd.Series]:
+    ) -> VectorPdNp:
         """Return an array with the difference between the real values and the
         fitted values.
 
@@ -82,7 +95,7 @@ class NumericPrediction(Prediction):
 
         Returns
         -------
-        Union[np.ndarray, pd.Series]
+        np.ndarray or pd.Series
             Numpy array or pandas series depending on the type of real_values and
             fitted_values. Its shape is (N,).
         """
@@ -95,7 +108,7 @@ class NumericPrediction(Prediction):
             return abs(residuals)
         return residuals
 
-    def matches_tolerance(self, tolerance: float = 0.0) -> Union[np.ndarray, pd.Series]:
+    def matches_tolerance(self, tolerance: float = 0.0) -> VectorPdNp:
         """Return a boolean array of length N with True where the distance
         between the real values and the fitted values is inferior to a
         given parameter."""
