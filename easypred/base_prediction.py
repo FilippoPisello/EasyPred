@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from easypred.type_aliases import VectorPdNp
+from easypred.utils import lists_to_nparray
 
 
 class Prediction:
@@ -42,19 +43,12 @@ class Prediction:
             The array-like object of length N containing the fitted values. If list,
             it will be turned into np.array.
         """
-        self.real_values = real_values
-        self.fitted_values = fitted_values
+        self.real_values, self.fitted_values = lists_to_nparray(
+            real_values, fitted_values
+        )
 
         # Processing appening at __init__
         self._check_lengths_match()
-        self._lists_to_nparray()
-
-    def _lists_to_nparray(self) -> None:
-        """Turn lists into numpy arrays."""
-        if isinstance(self.fitted_values, list):
-            self.fitted_values = np.array(self.fitted_values)
-        if isinstance(self.real_values, list):
-            self.real_values = np.array(self.real_values)
 
     def _check_lengths_match(self) -> None:
         """Check that fitted values and real values have the same length."""

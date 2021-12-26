@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 
 from easypred import BinaryScore, Prediction
+from easypred.utils import other_value
 
 
 class BinaryPrediction(Prediction):
@@ -55,10 +56,7 @@ class BinaryPrediction(Prediction):
     @property
     def value_negative(self) -> Any:
         """Return the value that it is not the positive value."""
-        other_only = self.real_values[self.real_values != self.value_positive]
-        if isinstance(self.real_values, np.ndarray):
-            return other_only[0].copy()
-        return other_only.reset_index(drop=True)[0]
+        return other_value(self.real_values, self.value_positive)
 
     @property
     def balanced_accuracy_score(self) -> float:
@@ -237,7 +235,8 @@ class BinaryPrediction(Prediction):
     def from_prediction(
         cls, prediction: Prediction, value_positive
     ) -> BinaryPrediction:
-        """Create an instance of BinaryPrediction.
+        """Create an instance of BinaryPrediction from a general Prediction
+        object.
 
         Parameters
         ----------
@@ -264,9 +263,29 @@ class BinaryPrediction(Prediction):
     def from_binary_score(
         cls, binary_score: BinaryScore, threshold: float = 0.5
     ) -> BinaryPrediction:
-        fitted_values = (binary_score.fitted_scores >= threshold).astype(int)
+        """Create an instance of BinaryPrediction from a BinaryScore object.
+
+        Parameters
+        ----------
+        prediction : BinaryScore
+            The BinaryScore object the BinaryPrediction is to be constructed from.
+        value_positive : Any
+            The value in the data that corresponds to 1 in the boolean logic.
+            It is generally associated with the idea of "positive" or being in
+            the "treatment" group. By default is 1.
+        threshold : float, optional
+            The minimum value such that the score is translated into
+            value_positive. Any score below the threshold is instead associated
+            with the other value. By default 0.5.
+
+        Returns
+        -------
+        BinaryPrediction
+            An object of type BinaryPrediction, a subclass of Prediction specific
+            for predictions with just two outcomes.
+        """
         return cls(
             real_values=binary_score.real_values,
-            fitted_values=fitted_values,
+            fitted_values=binary_score.score_to_values(threshold=threshold),
             value_positive=binary_score.value_positive,
         )
