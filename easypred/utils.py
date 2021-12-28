@@ -32,9 +32,10 @@ def lists_to_nparray(
 
 
 def other_value(array: VectorPdNp, excluded_value: Any) -> Any:
-    """Given a vector-like object assumed to be binary, return the value that
-    is not excluded_value."""
+    """Given a vector-like object assumed to be binary, return the value from
+    the object that is not excluded_value."""
     other_only = array[array != excluded_value]
     if isinstance(array, np.ndarray):
         return other_only[0].copy()
+    # Type is excpected to be pd.Series
     return other_only.reset_index(drop=True)[0]
