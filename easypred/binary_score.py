@@ -1,6 +1,7 @@
 from typing import Any, Callable
 
 import numpy as np
+import pandas as pd
 
 from easypred.type_aliases import Vector, VectorPdNp
 from easypred.utils import lists_to_nparray, other_value
@@ -17,22 +18,17 @@ class BinaryScore:
             real_values, fitted_scores
         )
         self.value_positive = value_positive
+        self.computation_decimals = 3
 
     @property
     def value_negative(self) -> Any:
         """Return the value that it is not the positive value."""
         return other_value(self.real_values, self.value_positive)
 
-    def unique_scores(self, decimals: int = 3) -> VectorPdNp:
+    @property
+    def unique_scores(self) -> VectorPdNp:
         """Return the unique values attained by the fitted scores, sorted in
-        ascending order.
-
-        Parameters
-        ----------
-        decimals : int, optional
-            The number of decimals the fitted scores should be rounded to before
-            deriving the unique values. It helps speeding up the operations in
-            the case of large datasets. By default 3
+        ascending order
 
         Returns
         -------
@@ -40,9 +36,12 @@ class BinaryScore:
             The array containing the sorted unique values. Its type matches
             fitted_scores' type.
         """
-        if isinstance(self.fitted_scores, np.ndarray):
-            return np.unique(self.fitted_scores.round(decimals))
-        return self.fitted_scores.round(decimals).unique().sort_values(ascending=True)
+        scores = np.unique(self.fitted_scores.round(self.computation_decimals))
+
+        if isinstance(self.fitted_scores, pd.Series):
+            return pd.Series(scores)
+
+        return scores
 
     def score_to_values(self, threshold: float = 0.5) -> VectorPdNp:
         """Return an array contained fitted values derived on the basis of the
@@ -94,7 +93,7 @@ class BinaryScore:
         return self._metric_array(recall_score, value_positive=self.value_positive)
 
     def _metric_array(
-        self, metric_function: Callable[..., float], decimals: int = 3, **kwargs
+        self, metric_function: Callable[..., float], **kwargs
     ) -> np.ndarray:
         """Return an array containing the passed metric calculated setting the
         threshold for each unique score value.
@@ -103,11 +102,6 @@ class BinaryScore:
         ----------
         metric_function : Callable(VectorPdNp, VectorPdNp, ...) -> float
             The function that calculates the metric.
-        decimals : int, optional
-            Thresholds correspond to the unique values of the fitted scores
-            after these are rounded to an arbitrary number of decimals in order
-            to speed up the operations. The number of decimals is regulated
-            through this parameter. By default 3.
         **kwargs : Any
             Arguments to be directly passed to metric_function.
 
@@ -119,6 +113,6 @@ class BinaryScore:
         return np.array(
             [
                 metric_function(self.real_values, self.score_to_values(val), **kwargs)
-                for val in self.unique_scores(decimals=decimals)
+                for val in self.unique_scores
             ]
         )
