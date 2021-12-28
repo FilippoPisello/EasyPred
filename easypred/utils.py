@@ -1,19 +1,34 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Union
 
 import numpy as np
+import pandas as pd
 
 from easypred.type_aliases import Vector, VectorPdNp
 
 
-def lists_to_nparray(*listlike_inputs: Vector) -> tuple[VectorPdNp, ...]:
-    """For each passed element, if list is turned into numpy array, otherwise it
-    is left untouched."""
-    return (
-        np.array(element) if isinstance(element, list) else element
+def lists_to_nparray(
+    *listlike_inputs: Vector,
+) -> Union[VectorPdNp, tuple[VectorPdNp, ...]]:
+    """For each passed element, if it is not of type np.array or pd.Series
+    it gets coerced to np.array. Otherwise, it is left unchanged.
+
+    Returns
+    -------
+    np.array | pd.Series | tuple(np.array | pd.Series, ...)
+        If a single argument is passed, the single transformed element is
+        returned. In case of multiple argument, a tuple containing the
+        transformed version of each element is returned.
+    """
+    accepted_types = (pd.Series, np.ndarray)
+    res = tuple(
+        np.array(element) if not isinstance(element, accepted_types) else element
         for element in listlike_inputs
     )
+    if len(res) == 1:
+        return res[0]
+    return res
 
 
 def other_value(array: VectorPdNp, excluded_value: Any) -> Any:
