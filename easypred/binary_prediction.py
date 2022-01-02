@@ -5,13 +5,16 @@ values.
 It allows to compute accuracy metrics like true positive, true negative, etc."""
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 import numpy as np
 import pandas as pd
 
-from easypred import BinaryScore, Prediction
+from easypred import Prediction
 from easypred.utils import other_value
+
+if TYPE_CHECKING:
+    from easypred import BinaryScore
 
 
 class BinaryPrediction(Prediction):

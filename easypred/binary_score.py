@@ -3,6 +3,7 @@ from typing import Any, Callable
 import numpy as np
 import pandas as pd
 
+from easypred import BinaryPrediction
 from easypred.type_aliases import Vector, VectorPdNp
 from easypred.utils import lists_to_nparray, other_value
 
