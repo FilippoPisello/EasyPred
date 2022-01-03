@@ -70,6 +70,21 @@ def test_false_positive_rates(score, decimals, expected):
         (score1, 3, np.array([1, 1, 1, 1 / 2])),
     ],
 )
-def test_recall_scores(score, decimals, excpected):
+def test_auc_score():
+    from sklearn.datasets import load_breast_cancer
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import roc_auc_score
+
+    X, y = load_breast_cancer(return_X_y=True)
+    clf = LogisticRegression(solver="liblinear", random_state=0).fit(X, y)
+    probs = clf.predict_proba(X)[:, 1]
+    expected = roc_auc_score(y, probs)
+
+    score = BinaryScore(y, probs)
+    score.computation_decimals = 20
+    actual = score.auc_score
+    assert round(actual, 6) == round(expected, 6)
+
+
     score.computation_decimals = decimals
     np.testing.assert_array_equal(score.recall_scores, excpected)

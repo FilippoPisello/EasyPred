@@ -68,6 +68,12 @@ class BinaryScore:
         )
 
     @property
+    def auc_score(self) -> float:
+        """Return the Area Under the Receiver Operating Characteristic Curve
+        (ROC AUC)."""
+        return np.abs(np.trapz(self.recall_scores, self.false_positive_rates))
+
+    @property
     def accuracy_scores(self) -> np.ndarray:
         """Return an array containing the accuracy scores calculated setting the
         threshold for each unique score value."""
