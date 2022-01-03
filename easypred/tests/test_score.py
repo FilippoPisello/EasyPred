@@ -91,5 +91,13 @@ def test_auc_score():
     assert round(actual, 6) == round(expected, 6)
 
 
+@pytest.mark.parametrize(
+    "score, decimals, expected",
+    [
+        (score1, 3, np.array([4 / 7, 2 / 3, 1, 2 / 3])),
+        (score1, 4, np.array([4 / 7, 2 / 3, 4 / 5, 1, 2 / 3])),
+    ],
+)
+def test_f1_scores(score, decimals, expected):
     score.computation_decimals = decimals
-    np.testing.assert_array_equal(score.recall_scores, excpected)
+    np.testing.assert_allclose(score.f1_scores, expected)

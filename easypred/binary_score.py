@@ -99,6 +99,14 @@ class BinaryScore:
 
         return self._metric_array(recall_score, value_positive=self.value_positive)
 
+    @property
+    def f1_scores(self) -> np.ndarray:
+        """Return an array containing the f1 scores calculated setting the
+        threshold for each unique score value."""
+        from easypred.metrics import f1_score
+
+        return self._metric_array(f1_score, value_positive=self.value_positive)
+
     def _metric_array(
         self, metric_function: Callable[..., float], **kwargs
     ) -> np.ndarray:
