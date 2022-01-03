@@ -70,6 +70,11 @@ def test_false_positive_rates(score, decimals, expected):
         (score1, 3, np.array([1, 1, 1, 1 / 2])),
     ],
 )
+def test_recall_scores(score, decimals, expected):
+    score.computation_decimals = decimals
+    np.testing.assert_array_equal(score.recall_scores, expected)
+
+
 def test_auc_score():
     from sklearn.datasets import load_breast_cancer
     from sklearn.linear_model import LogisticRegression
