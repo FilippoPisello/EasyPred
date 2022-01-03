@@ -1,3 +1,9 @@
+"""Class to represent probability estimates, thus predictions that do not
+directly return fitted values but that can be converted to such. It can be
+viewed as the step before BinaryPrediction.
+
+It allows to compute AUC score and other metrics that depend on the convertion
+threshold as arrays."""
 from typing import Any, Callable, Union
 
 import numpy as np
@@ -9,12 +15,44 @@ from easypred.utils import lists_to_nparray, other_value
 
 
 class BinaryScore:
+    """Class to represent a prediction in terms of probability estimates, thus
+    having each observation paired with a score between 0 and 1 representing
+    the likelihood of being the "positive value".
+
+    Attributes
+    -------
+    fitted_scores: np.ndarray | pd.Series
+        The array-like object of length N containing the probability scores.
+    real_values: np.ndarray | pd.Series
+        The array-like object containing the N real values.
+    value_positive: Any
+        The value in the data that corresponds to 1 in the boolean logic.
+        It is generally associated with the idea of "positive" or being in
+        the "treatment" group. By default is 1.
+    """
+
     def __init__(
         self,
         real_values: Vector,
         fitted_scores: Vector,
         value_positive: Any = 1,
     ):
+        """Class to represent a prediction in terms of probability estimates.
+
+        Arguments
+        -------
+        real_values: np.ndarray | pd.Series | list | tuple
+            The array-like object containing the real values. If not pd.Series
+            or np.array, it will be coerced into np.array.
+        fitted_scores: np.ndarray | pd.Series | list | tuple
+            The array-like object of length N containing the probability scores.
+            It must have the same length as real_values. If not pd.Series or
+            np.array, it will be coerced into np.array.
+        value_positive: Any
+            The value in the data that corresponds to 1 in the boolean logic.
+            It is generally associated with the idea of "positive" or being in
+            the "treatment" group. By default is 1.
+        """
         self.real_values, self.fitted_scores = lists_to_nparray(
             real_values, fitted_scores
         )

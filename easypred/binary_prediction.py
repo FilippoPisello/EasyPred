@@ -2,7 +2,8 @@
 a prediction where both the fitted and real data attain at most two different
 values.
 
-It allows to compute accuracy metrics like true positive, true negative, etc."""
+It allows to compute accuracy metrics like true positive, true negative,
+etc."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Union
@@ -22,9 +23,9 @@ class BinaryPrediction(Prediction):
 
     Attributes
     -------
-    fitted_values: Union[np.ndarray, pd.Series, list]
+    fitted_values: np.ndarray | pd.Series
         The array-like object of length N containing the fitted values.
-    real_values: Union[np.ndarray, pd.Series, list]
+    real_values: np.ndarray | pd.Series
         The array-like object containing the N real values.
     value_positive: Any
         The value in the data that corresponds to 1 in the boolean logic.
@@ -42,12 +43,13 @@ class BinaryPrediction(Prediction):
 
         Arguments
         -------
-        real_values: Union[np.ndarray, pd.Series, list]
-            The array-like object containing the real values. It must have the same
-            length of fitted_values. If list, it will be turned into np.array.
-        fitted_values: Union[np.ndarray, pd.Series, list]
-            The array-like object of length N containing the fitted values. If list,
-            it will be turned into np.array.
+        real_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of length N containing the real values. If
+            not pd.Series or np.array, it will be coerced into np.array.
+        fitted_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of containing the real values. It must have
+            the same length of real_values. If not pd.Series or np.array, it
+            will be coerced into np.array.
         value_positive: Any
             The value in the data that corresponds to 1 in the boolean logic.
             It is generally associated with the idea of "positive" or being in

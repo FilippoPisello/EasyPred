@@ -21,10 +21,10 @@ class Prediction:
 
     Attributes
     ----------
-    real_values : Union[np.ndarray, pd.Series, list]
-        The array-like object containing the N real values.
-    fitted_values : Union[np.ndarray, pd.Series, list]
+    fitted_values: np.ndarray | pd.Series
         The array-like object of length N containing the fitted values.
+    real_values: np.ndarray | pd.Series
+        The array-like object containing the N real values.
     """
 
     def __init__(
@@ -36,12 +36,13 @@ class Prediction:
 
         Arguments
         -------
-        real_values: Union[np.ndarray, pd.Series, list]
-            The array-like object containing the real values. It must have the same
-            length of fitted_values. If list, it will be turned into np.array.
-        fitted_values: Union[np.ndarray, pd.Series, list]
-            The array-like object of length N containing the fitted values. If list,
-            it will be turned into np.array.
+        real_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of length N containing the real values. If
+            not pd.Series or np.array, it will be coerced into np.array.
+        fitted_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of containing the real values. It must have
+            the same length of real_values. If not pd.Series or np.array, it
+            will be coerced into np.array.
         """
         self.real_values, self.fitted_values = lists_to_nparray(
             real_values, fitted_values
