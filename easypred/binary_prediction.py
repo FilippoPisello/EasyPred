@@ -264,31 +264,37 @@ class BinaryPrediction(Prediction):
 
     @classmethod
     def from_binary_score(
-        cls, binary_score: BinaryScore, threshold: float = 0.5
+        cls, binary_score: BinaryScore, threshold: Union[float, str] = 0.5
     ) -> BinaryPrediction:
         """Create an instance of BinaryPrediction from a BinaryScore object.
 
         Parameters
         ----------
-        prediction : BinaryScore
-            The BinaryScore object the BinaryPrediction is to be constructed from.
+        binary_score : BinaryScore
+            The BinaryScore object the BinaryPrediction is to be constructed
+            from.
         value_positive : Any
             The value in the data that corresponds to 1 in the boolean logic.
             It is generally associated with the idea of "positive" or being in
             the "treatment" group. By default is 1.
-        threshold : float, optional
-            The minimum value such that the score is translated into
-            value_positive. Any score below the threshold is instead associated
-            with the other value. By default 0.5.
+        threshold : float | str, optional
+            If float, it is the minimum value such that the score is translated
+            into value_positive. Any score below the threshold is instead
+            associated with the other value.
+            If str, the threshold is automatically set such that it maximizes
+            the metric corresponding to the provided keyword. The available
+            keywords are:
+            - "f1": maximize the f1 score
+            - "accuracy": maximize the accuracy score
+
+            By default 0.5.
 
         Returns
         -------
         BinaryPrediction
-            An object of type BinaryPrediction, a subclass of Prediction specific
-            for predictions with just two outcomes.
+            An object of type BinaryPrediction, a subclass of Prediction
+            specific for predictions with just two outcomes. The class instance
+            is given the special attribute "threshold" that returns the
+            threshold used in the convertion.
         """
-        return cls(
-            real_values=binary_score.real_values,
-            fitted_values=binary_score.score_to_values(threshold=threshold),
-            value_positive=binary_score.value_positive,
-        )
+        return binary_score.to_binary_prediction(threshold=threshold)

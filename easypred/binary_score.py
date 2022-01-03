@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Any, Callable, Union
 
 import numpy as np
 import pandas as pd
@@ -161,3 +161,39 @@ class BinaryScore:
 
         return self.unique_scores[numb]
 
+    def to_binary_prediction(
+        self, threshold: Union[float, str] = 0.5
+    ) -> BinaryPrediction:
+        """Create an instance of BinaryPrediction from the BinaryScore object.
+
+        Parameters
+        ----------
+        threshold : float | str, optional
+            If float, it is the minimum value such that the score is translated
+            into value_positive. Any score below the threshold is instead
+            associated with the other value.
+            If str, the threshold is automatically set such that it maximizes
+            the metric corresponding to the provided keyword. The available
+            keywords are:
+            - "f1": maximize the f1 score
+            - "accuracy": maximize the accuracy score
+
+            By default 0.5.
+
+        Returns
+        -------
+        BinaryPrediction
+            An object of type BinaryPrediction, a subclass of Prediction
+            specific for predictions with just two outcomes. The class instance
+            is given the special attribute "threshold" that returns the
+            threshold used in the convertion.
+        """
+        if isinstance(threshold, str):
+            threshold = self.best_threshold(criterion=threshold)
+        binpred = BinaryPrediction(
+            real_values=self.real_values,
+            fitted_values=self.score_to_values(threshold=threshold),
+            value_positive=self.value_positive,
+        )
+        binpred.threshold = threshold
+        return binpred

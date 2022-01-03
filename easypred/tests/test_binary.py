@@ -69,3 +69,14 @@ class TestBinaryPrediction(TestCase):
             index=["Value"],
         ).transpose()
         pd.testing.assert_frame_equal(exp, self.p1.describe())
+
+
+def test_from_score():
+    from easypred import BinaryScore
+
+    binscore = BinaryScore([0, 1, 1], [0.3, 0.5, 0.7], value_positive=1)
+    res = BinaryPrediction.from_binary_score(binscore, threshold=0.5)
+    exp = BinaryPrediction([0, 1, 1], [0, 1, 1], value_positive=1)
+
+    assert isinstance(res, BinaryPrediction)
+    assert res == exp

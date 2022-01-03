@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pytest
-from easypred import BinaryScore
+from easypred import BinaryPrediction, BinaryScore
 
 realA, scoresA = [1, 0, 0, 1, 0], [0.79, 0.25, 0.34143, 0.66, 0.34133]
 score1 = BinaryScore(realA, scoresA, 1)
@@ -120,3 +120,17 @@ def test_best_threshold(score, decimals, criterion, expected):
 def test_best_threshold_fails():
     with pytest.raises(ValueError):
         score1.best_threshold(criterion="Lorem ipsum")
+
+
+@pytest.mark.parametrize(
+    "score, decimals, threshold, expected",
+    [
+        (score1, 3, "f1", BinaryPrediction([1, 0, 0, 1, 0], [1, 0, 0, 1, 0])),
+        (score1, 3, "accuracy", BinaryPrediction([1, 0, 0, 1, 0], [1, 0, 0, 1, 0])),
+        (score1, 3, 0.5, BinaryPrediction([1, 0, 0, 1, 0], [1, 0, 0, 1, 0])),
+        (score1, 3, 0.3, BinaryPrediction([1, 0, 0, 1, 0], [1, 0, 1, 1, 1])),
+    ],
+)
+def test_to_binary(score, decimals, threshold, expected):
+    score.computation_decimals = decimals
+    assert score.to_binary_prediction(threshold=threshold) == expected
