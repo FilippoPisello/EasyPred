@@ -131,3 +131,33 @@ class BinaryScore:
                 for val in self.unique_scores
             ]
         )
+
+    def best_threshold(self, criterion="f1") -> float:
+        """Return the threshold to convert scores into values that performs the
+        best given a specified criterion.
+
+        Parameters
+        ----------
+        criterion : str, optional
+            The value to be maximized by the threshold. It defaults to "f1",
+            the options are:
+            - "f1": maximize the f1 score
+            - "accuracy": maximize the accuracy score
+
+        Returns
+        -------
+        float
+            The threshold that maximizes the indicator specified.
+        """
+        if criterion == "f1":
+            numb = np.argmax(self.f1_scores)
+        elif criterion == "accuracy":
+            numb = np.argmax(self.accuracy_scores)
+        else:
+            raise ValueError(
+                f"Unrecognized criterion: {criterion}. Allowed "
+                "criteria are 'f1', 'accuracy'."
+            )
+
+        return self.unique_scores[numb]
+

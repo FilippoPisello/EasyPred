@@ -101,3 +101,22 @@ def test_auc_score():
 def test_f1_scores(score, decimals, expected):
     score.computation_decimals = decimals
     np.testing.assert_allclose(score.f1_scores, expected)
+
+
+@pytest.mark.parametrize(
+    "score, decimals, criterion, expected",
+    [
+        (score1, 3, "f1", 0.66),
+        (score1, 3, "accuracy", 0.66),
+        (score1, 4, "f1", 0.66),
+        (score1, 4, "accuracy", 0.66),
+    ],
+)
+def test_best_threshold(score, decimals, criterion, expected):
+    score.computation_decimals = decimals
+    np.testing.assert_allclose(score.best_threshold(criterion=criterion), expected)
+
+
+def test_best_threshold_fails():
+    with pytest.raises(ValueError):
+        score1.best_threshold(criterion="Lorem ipsum")
