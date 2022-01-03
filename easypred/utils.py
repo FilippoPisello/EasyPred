@@ -39,3 +39,19 @@ def other_value(array: VectorPdNp, excluded_value: Any) -> Any:
         return other_only[0].copy()
     # Type is excpected to be pd.Series
     return other_only.reset_index(drop=True)[0]
+
+
+def check_lengths_match(
+    array1: Vector,
+    array2: Vector,
+    name_array1: str = "First array",
+    name_array2: str = "Second array",
+) -> None:
+    """Check that the two passed arrays have the same length."""
+    len1, len2 = len(array1), len(array2)
+    if len1 != len2:
+        raise ValueError(
+            f"{name_array1} and {name_array2} must have the same length.\n"
+            f"{name_array1} has length: {len1}.\n"
+            f"{name_array2} has length: {len2}."
+        )

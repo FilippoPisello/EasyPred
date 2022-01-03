@@ -11,7 +11,7 @@ import pandas as pd
 
 from easypred import BinaryPrediction
 from easypred.type_aliases import Vector, VectorPdNp
-from easypred.utils import lists_to_nparray, other_value
+from easypred.utils import check_lengths_match, lists_to_nparray, other_value
 
 
 class BinaryScore:
@@ -58,6 +58,11 @@ class BinaryScore:
         )
         self.value_positive = value_positive
         self.computation_decimals = 3
+
+        # Processing appening at __init__
+        check_lengths_match(
+            self.real_values, self.fitted_scores, "Real values", "Fitted scores"
+        )
 
     @property
     def value_negative(self) -> Any:

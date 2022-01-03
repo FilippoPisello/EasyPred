@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 from easypred.type_aliases import VectorPdNp
-from easypred.utils import lists_to_nparray
+from easypred.utils import check_lengths_match, lists_to_nparray
 
 
 class Prediction:
@@ -49,17 +49,9 @@ class Prediction:
         )
 
         # Processing appening at __init__
-        self._check_lengths_match()
-
-    def _check_lengths_match(self) -> None:
-        """Check that fitted values and real values have the same length."""
-        len_fit, len_real = len(self.fitted_values), len(self.real_values)
-        if len_fit != len_real:
-            raise ValueError(
-                "Fitted values and real values must have the same length.\n"
-                + f"Fitted values has length: {len_fit}.\n"
-                + f"Real values has length: {len_real}."
-            )
+        check_lengths_match(
+            self.real_values, self.fitted_values, "Real values", "Fitted values"
+        )
 
     def __str__(self):
         return self.fitted_values.__str__()
