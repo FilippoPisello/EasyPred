@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from easypred.type_aliases import VectorPdNp
+from easypred.utils import check_lengths_match, lists_to_nparray
 
 
 class Prediction:
@@ -20,10 +21,10 @@ class Prediction:
 
     Attributes
     ----------
-    real_values : Union[np.ndarray, pd.Series, list]
-        The array-like object containing the N real values.
-    fitted_values : Union[np.ndarray, pd.Series, list]
+    fitted_values: np.ndarray | pd.Series
         The array-like object of length N containing the fitted values.
+    real_values: np.ndarray | pd.Series
+        The array-like object containing the N real values.
     """
 
     def __init__(
@@ -35,36 +36,22 @@ class Prediction:
 
         Arguments
         -------
-        real_values: Union[np.ndarray, pd.Series, list]
-            The array-like object containing the real values. It must have the same
-            length of fitted_values. If list, it will be turned into np.array.
-        fitted_values: Union[np.ndarray, pd.Series, list]
-            The array-like object of length N containing the fitted values. If list,
-            it will be turned into np.array.
+        real_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of length N containing the real values. If
+            not pd.Series or np.array, it will be coerced into np.array.
+        fitted_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of containing the real values. It must have
+            the same length of real_values. If not pd.Series or np.array, it
+            will be coerced into np.array.
         """
-        self.real_values = real_values
-        self.fitted_values = fitted_values
+        self.real_values, self.fitted_values = lists_to_nparray(
+            real_values, fitted_values
+        )
 
         # Processing appening at __init__
-        self._check_lengths_match()
-        self._lists_to_nparray()
-
-    def _lists_to_nparray(self) -> None:
-        """Turn lists into numpy arrays."""
-        if isinstance(self.fitted_values, list):
-            self.fitted_values = np.array(self.fitted_values)
-        if isinstance(self.real_values, list):
-            self.real_values = np.array(self.real_values)
-
-    def _check_lengths_match(self) -> None:
-        """Check that fitted values and real values have the same length."""
-        len_fit, len_real = len(self.fitted_values), len(self.real_values)
-        if len_fit != len_real:
-            raise ValueError(
-                "Fitted values and real values must have the same length.\n"
-                + f"Fitted values has length: {len_fit}.\n"
-                + f"Real values has length: {len_real}."
-            )
+        check_lengths_match(
+            self.real_values, self.fitted_values, "Real values", "Fitted values"
+        )
 
     def __str__(self):
         return self.fitted_values.__str__()

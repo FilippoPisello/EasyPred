@@ -2,15 +2,20 @@
 a prediction where both the fitted and real data attain at most two different
 values.
 
-It allows to compute accuracy metrics like true positive, true negative, etc."""
+It allows to compute accuracy metrics like true positive, true negative,
+etc."""
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, Union
 
 import numpy as np
 import pandas as pd
 
 from easypred import Prediction
+from easypred.utils import other_value
+
+if TYPE_CHECKING:
+    from easypred import BinaryScore
 
 
 class BinaryPrediction(Prediction):
@@ -18,9 +23,9 @@ class BinaryPrediction(Prediction):
 
     Attributes
     -------
-    fitted_values: Union[np.ndarray, pd.Series, list]
+    fitted_values: np.ndarray | pd.Series
         The array-like object of length N containing the fitted values.
-    real_values: Union[np.ndarray, pd.Series, list]
+    real_values: np.ndarray | pd.Series
         The array-like object containing the N real values.
     value_positive: Any
         The value in the data that corresponds to 1 in the boolean logic.
@@ -38,12 +43,13 @@ class BinaryPrediction(Prediction):
 
         Arguments
         -------
-        real_values: Union[np.ndarray, pd.Series, list]
-            The array-like object containing the real values. It must have the same
-            length of fitted_values. If list, it will be turned into np.array.
-        fitted_values: Union[np.ndarray, pd.Series, list]
-            The array-like object of length N containing the fitted values. If list,
-            it will be turned into np.array.
+        real_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of length N containing the real values. If
+            not pd.Series or np.array, it will be coerced into np.array.
+        fitted_values: np.ndarray | pd.Series | list | tuple
+            The array-like object of containing the real values. It must have
+            the same length of real_values. If not pd.Series or np.array, it
+            will be coerced into np.array.
         value_positive: Any
             The value in the data that corresponds to 1 in the boolean logic.
             It is generally associated with the idea of "positive" or being in
@@ -55,10 +61,7 @@ class BinaryPrediction(Prediction):
     @property
     def value_negative(self) -> Any:
         """Return the value that it is not the positive value."""
-        other_only = self.real_values[self.real_values != self.value_positive]
-        if isinstance(self.real_values, np.ndarray):
-            return other_only[0].copy()
-        return other_only.reset_index(drop=True)[0]
+        return other_value(self.real_values, self.value_positive)
 
     @property
     def balanced_accuracy_score(self) -> float:
@@ -237,7 +240,8 @@ class BinaryPrediction(Prediction):
     def from_prediction(
         cls, prediction: Prediction, value_positive
     ) -> BinaryPrediction:
-        """Create an instance of BinaryPrediction.
+        """Create an instance of BinaryPrediction from a general Prediction
+        object.
 
         Parameters
         ----------
@@ -259,3 +263,40 @@ class BinaryPrediction(Prediction):
             real_values=prediction.real_values,
             value_positive=value_positive,
         )
+
+    @classmethod
+    def from_binary_score(
+        cls, binary_score: BinaryScore, threshold: Union[float, str] = 0.5
+    ) -> BinaryPrediction:
+        """Create an instance of BinaryPrediction from a BinaryScore object.
+
+        Parameters
+        ----------
+        binary_score : BinaryScore
+            The BinaryScore object the BinaryPrediction is to be constructed
+            from.
+        value_positive : Any
+            The value in the data that corresponds to 1 in the boolean logic.
+            It is generally associated with the idea of "positive" or being in
+            the "treatment" group. By default is 1.
+        threshold : float | str, optional
+            If float, it is the minimum value such that the score is translated
+            into value_positive. Any score below the threshold is instead
+            associated with the other value.
+            If str, the threshold is automatically set such that it maximizes
+            the metric corresponding to the provided keyword. The available
+            keywords are:
+            - "f1": maximize the f1 score
+            - "accuracy": maximize the accuracy score
+
+            By default 0.5.
+
+        Returns
+        -------
+        BinaryPrediction
+            An object of type BinaryPrediction, a subclass of Prediction
+            specific for predictions with just two outcomes. The class instance
+            is given the special attribute "threshold" that returns the
+            threshold used in the convertion.
+        """
+        return binary_score.to_binary_prediction(threshold=threshold)
