@@ -76,17 +76,30 @@ def test_recall_scores(score, decimals, expected):
 
 
 def test_auc_score():
-    from sklearn.datasets import load_breast_cancer
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.metrics import roc_auc_score
+    """Check that the same AUC score as sklearn is returned.
 
-    X, y = load_breast_cancer(return_X_y=True)
-    clf = LogisticRegression(solver="liblinear", random_state=0).fit(X, y)
-    probs = clf.predict_proba(X)[:, 1]
-    expected = roc_auc_score(y, probs)
+    The correctness of the score is assessed by comparing a result with what
+    returned by Sklearn. Not to have Sklearn and requirements clutter
+    EasyPred's test dependencies, Sklearn's result was stored statically, both
+    in the final output - the score - and the inputs required to have it.
+
+    At the top of the tests, the code to derive 'data["REAL"]', 'data["SCORE"]'
+    and 'expected' directly from sklearn is provided."""
+    # from sklearn.datasets import load_breast_cancer
+    # from sklearn.linear_model import LogisticRegression
+    # from sklearn.metrics import
+    # X, y = load_breast_cancer(return_X_y=True)
+    # clf = LogisticRegression(solver="liblinear", random_state=0).fit(X, y)
+    # probs = clf.predict_proba(X)[:, 1]
+    # expected = roc_auc_score(y, probs)
+
+    # Static alternative
+    data = pd.read_excel("easypred/tests/test_data/auc_breast.xlsx")
+    expected = 0.9947412927435125
+    y, probs = data["REAL"], data["SCORE"]
 
     score = BinaryScore(y, probs)
-    score.computation_decimals = 20
+    score.computation_decimals = 4
     actual = score.auc_score
     assert round(actual, 6) == round(expected, 6)
 
