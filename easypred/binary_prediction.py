@@ -187,7 +187,7 @@ class BinaryPrediction(Prediction):
 
         Returns
         -------
-        Union[np.ndarray, pd.DataFrame]
+        np.ndarray | pd.DataFrame
             If as_dataframe is False, return a numpy array of shape (2, 2).
             Otherwise return a pandas dataframe of the same shape.
         """

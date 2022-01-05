@@ -265,7 +265,7 @@ class NumericPrediction(Prediction):
         figsize : tuple[int, int], optional
             Tuple of integers specifying the size of the plot. Default is
             (20, 10).
-        line_slope : Union[int, None], optional
+        line_slope : int | None, optional
             Slope of the red dashed line added to the scatterplot. If None, no
             line is drawn. By default is 1, representing parity between real
             and fitted values.
