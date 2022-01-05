@@ -24,8 +24,9 @@ Why EasyPred can be useful:
    :caption: Contents:
 
    usage
-   easypred
-   otherdocs
+   predictions_docs
+   score_docs
+   other_docs
 
 Indices and tables
 ==================

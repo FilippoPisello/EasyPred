@@ -33,10 +33,18 @@ EasyPred depends on the following libraries:
 Usage
 ~~~~~
 
-At the moment, three types of predictions are implemented: -
-**Prediction** -> any prediction - **BinaryPrediction** -> fitted and
-real data attain only two values - **NumericPrediction** -> fitted and
-real data are numeric
+The core of the library consists in its four prediction-like objects.
+
+Three of them are proper representations of predictions:
+
+* **Prediction**: any prediction
+* **BinaryPrediction**: fitted and real data attain only two values
+* **NumericPrediction**: fitted and real data are numeric
+
+Then there is the case when observations are matched to a probability rather
+than to an outcome:
+
+* **BinaryScore**: prediction output that returns probability scores
 
 Prediction
 ^^^^^^^^^^

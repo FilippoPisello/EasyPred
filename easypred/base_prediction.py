@@ -43,6 +43,12 @@ class Prediction:
             The array-like object of containing the real values. It must have
             the same length of real_values. If not pd.Series or np.array, it
             will be coerced into np.array.
+
+        Examples
+        -------
+        >>> from easypred import Prediction
+        >>> pred = Prediction(real_values=["Foo", "Foo", "Bar", "Baz"],
+        ...                   fitted_values=["Foo", "Bar", "Foo", "Baz"])
         """
         self.real_values, self.fitted_values = lists_to_nparray(
             real_values, fitted_values
@@ -68,17 +74,49 @@ class Prediction:
     @property
     def accuracy_score(self) -> float:
         """Return a float representing the percent of items which are equal
-        between the real and the fitted values."""
+        between the real and the fitted values.
+
+        Examples
+        -------
+        >>> pred = Prediction(real_values=["Foo", "Foo", "Bar", "Baz"],
+        ...                   fitted_values=["Foo", "Bar", "Foo", "Baz"])
+        >>> pred.accuracy_score
+        0.5
+        """
         return np.mean(self.real_values == self.fitted_values)
 
     def matches(self) -> VectorPdNp:
         """Return a boolean array of length N with True where fitted value is
-        equal to real value."""
+        equal to real value.
+
+        Returns
+        -------
+        pd.Series | np.array
+
+        Examples
+        -------
+        >>> pred = Prediction(real_values=["Foo", "Foo", "Bar", "Baz"],
+        ...                   fitted_values=["Foo", "Bar", "Foo", "Baz"])
+        >>> pred.matches()
+        array([True, False, False, True])
+        """
         return self.real_values == self.fitted_values
 
     def as_dataframe(self) -> pd.DataFrame:
         """Return prediction as a dataframe containing various information over
-        the prediction quality."""
+        the prediction quality.
+
+        Examples
+        -------
+        >>> pred = Prediction(real_values=["Foo", "Foo", "Bar", "Baz"],
+        ...                   fitted_values=["Foo", "Bar", "Foo", "Baz"])
+        >>> pred.as_dataframe()
+          Real Values Fitted Values  Prediction Matches
+        0         Foo           Foo                True
+        1         Foo           Bar               False
+        2         Bar           Foo               False
+        3         Baz           Baz                True
+        """
         data = {
             "Real Values": self.real_values,
             "Fitted Values": self.fitted_values,
@@ -88,7 +126,19 @@ class Prediction:
 
     def describe(self) -> pd.DataFrame:
         """Return a dataframe containing some key information about the
-        prediction."""
+        prediction.
+
+        Examples
+        -------
+        >>> pred = Prediction(real_values=["Foo", "Foo", "Bar", "Baz"],
+        ...                   fitted_values=["Foo", "Bar", "Foo", "Baz"])
+        >>> pred.describe()
+                  Value
+        N           4.0
+        Matches     2.0
+        Errors      2.0
+        Accuracy    0.5
+        """
         return self._describe()
 
     def _describe(self) -> pd.DataFrame:
