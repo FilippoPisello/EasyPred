@@ -4,7 +4,7 @@
 [![GitHub license](https://badgen.net/github/license/FilippoPisello/EasyPred)](https://github.com/FilippoPisello/EasyPred/blob/main/LICENSE)
 [![PyPI version fury.io](https://badge.fury.io/py/easypred.svg)](https://pypi.org/project/easypred/)
 [![Documentation Status](https://readthedocs.org/projects/easypred/badge/?version=latest)](https://easypred.readthedocs.io/en/latest/?badge=latest)
-[![PyPi](https://badgen.net/badge/icon/pypi?icon=pypi&label)]([https://https://pypi.org/](https://pypi.org/project/easypred/))
+[![PyPi](https://badgen.net/badge/icon/pypi?icon=pypi&label)](https://pypi.org/project/easypred/)
 ## What is it?
 EasyPred is a Python package that allows to easily store, investigate, assess and compare the predictions obtained through your Machine Learning models.
 
