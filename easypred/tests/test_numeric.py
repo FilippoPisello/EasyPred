@@ -91,16 +91,16 @@ class TestNumericPrediction(TestCase):
         """There is not much that can be done for graphs, so it is tested for
         no exceptions raised"""
         try:
-            self.pred_l1l2.plot_fit(show_plot=False)
+            self.pred_l1l2.plot_fit()
         except Exception as e:
-            self.fail("The following exception was raised: {e}")
+            self.fail(f"The following exception was raised: {e}")
 
         try:
-            self.pred_l1l2.plot_residuals(show_plot=False)
+            self.pred_l1l2.plot_residuals()
         except Exception as e:
-            self.fail("The following exception was raised: {e}")
+            self.fail(f"The following exception was raised: {e}")
 
         try:
-            self.pred_l1l2.plot_fit_residuals(show_plot=False)
+            self.pred_l1l2.plot_fit_residuals()
         except Exception as e:
-            self.fail("The following exception was raised: {e}")
+            self.fail(f"The following exception was raised: {e}")
