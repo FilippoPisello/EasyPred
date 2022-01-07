@@ -6,7 +6,7 @@ It allows to compute accuracy metrics like true positive, true negative,
 etc."""
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
@@ -166,7 +166,7 @@ class BinaryPrediction(Prediction):
 
     def confusion_matrix(
         self, relative: bool = False, as_dataframe: bool = False
-    ) -> Union[np.ndarray, pd.DataFrame]:
+    ) -> np.ndarray | pd.DataFrame:
         """Return the confusion matrix for the binary classification.
 
         The confusion matrix is a matrix with shape (2, 2) that classifies the
@@ -266,7 +266,7 @@ class BinaryPrediction(Prediction):
 
     @classmethod
     def from_binary_score(
-        cls, binary_score: BinaryScore, threshold: Union[float, str] = 0.5
+        cls, binary_score: BinaryScore, threshold: float | str = 0.5
     ) -> BinaryPrediction:
         """Create an instance of BinaryPrediction from a BinaryScore object.
 

@@ -4,6 +4,7 @@ viewed as the step before BinaryPrediction.
 
 It allows to compute AUC score and other metrics that depend on the convertion
 threshold as arrays."""
+from __future__ import annotations
 from typing import Any, Callable, Union
 
 import numpy as np
@@ -205,7 +206,7 @@ class BinaryScore:
         return self.unique_scores[numb]
 
     def to_binary_prediction(
-        self, threshold: Union[float, str] = 0.5
+        self, threshold: float | str = 0.5
     ) -> BinaryPrediction:
         """Create an instance of BinaryPrediction from the BinaryScore object.
 

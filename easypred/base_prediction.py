@@ -6,6 +6,7 @@ without needing to know how the prediction was computed.
 
 The subclasses allow for metrics that are relevant for just specific types
 of predictions."""
+from __future__ import annotations
 
 from typing import Union
 

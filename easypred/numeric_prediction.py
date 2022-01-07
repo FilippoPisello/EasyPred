@@ -14,7 +14,7 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
 from easypred import Prediction
-from easypred.type_aliases import VectorPdNp
+    from easypred.type_aliases import VectorPdNp
 
 
 class NumericPrediction(Prediction):
@@ -147,7 +147,7 @@ class NumericPrediction(Prediction):
         figsize: tuple[int, int] = (20, 10),
         title_size: int = 14,
         axes_labels_size: int = 12,
-        axs: Union[None, list[Axes]] = None,
+        axs: list[Axes] | None = None,
     ) -> np.ndarray:
         """Plot a two panels figure containing the plot of real against fitted
         values and the plot of residuals against fitted values.
@@ -193,10 +193,10 @@ class NumericPrediction(Prediction):
     def plot_residuals(
         self,
         figsize: tuple[int, int] = (20, 10),
-        hline: Union[int, None] = 0,
+        hline: int | None = 0,
         title_size: int = 14,
         axes_labels_size: int = 12,
-        ax: Union[None, Axes] = None,
+        ax: Axes | None = None,
     ) -> Axes:
         """Plot the scatterplot depicting the residuals against fitted values.
 
@@ -240,10 +240,10 @@ class NumericPrediction(Prediction):
     def plot_fit(
         self,
         figsize: tuple[int, int] = (20, 10),
-        line_slope: Union[int, None] = 1,
+        line_slope: int | None = 1,
         title_size: int = 14,
         axes_labels_size: int = 12,
-        ax: Union[None, Axes] = None,
+        ax: Axes | None = None,
     ) -> Axes:
         """Plot the scatterplot depicting real against fitted values.
 
