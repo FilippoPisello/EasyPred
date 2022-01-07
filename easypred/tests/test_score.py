@@ -149,10 +149,18 @@ def test_to_binary(score, decimals, threshold, expected):
     assert score.to_binary_prediction(threshold=threshold) == expected
 
 
-def test_plot_does_not_fail():
+def test_auc_plot_does_not_fail():
     try:
         score1.plot_roc_curve()
         score1.plot_roc_curve(show_legend=False)
         score1.plot_roc_curve(plot_baseline=False)
+    except Exception as e:
+        assert False, f"plot_roc_curve() raised an exception {e}"
+
+
+def test_score_hist_does_not_fail():
+    try:
+        score1.plot_score_histogram()
+        score1.plot_score_histogram(bins=5)
     except Exception as e:
         assert False, f"plot_roc_curve() raised an exception {e}"

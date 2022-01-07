@@ -302,3 +302,47 @@ class BinaryScore:
             ax.legend(fontsize=axes_labels_size)
 
         return ax
+
+    def plot_score_histogram(
+        self,
+        figsize: tuple[int, int] = (20, 10),
+        title_size: int = 14,
+        axes_labels_size: int = 12,
+        ax: Axes | None = None,
+        **kwargs,
+    ) -> Axes:
+        """Plot the histogram of the probability scores.
+
+        Parameters
+        ----------
+        figsize : tuple[int, int], optional
+            Tuple of integers specifying the size of the plot. Default is
+            (20, 10).
+        title_size : int, optional
+            Font size of the plot title. Default is 14.
+        axes_labels_size : int, optional
+            Font size of the axes labels. Default is 12.
+        ax : matplotlib Axes, optional
+            Axes object to draw the plot onto, otherwise creates new Figure
+            and Axes. Use this option to further customize the plot.
+        kwargs : key, value mappings
+            Other keyword arguments tp be passed through to
+            matplotlib.pyplot.hist().
+
+        Returns
+        -------
+        matplotlib Axes
+            Matplotlib Axes object with the plot drawn on it.
+        """
+        if ax is None:
+            _, ax = plt.subplots(figsize=figsize)
+
+        ax.hist(self.fitted_scores, **kwargs)
+
+        ax.set_title("Fitted Scores Distribution", fontsize=title_size)
+        ax.set_xlabel("Fitted Scores", fontsize=axes_labels_size)
+        ax.set_ylabel("Frequency", fontsize=axes_labels_size)
+
+        ax.grid(True, ls="--")
+
+        return ax
