@@ -253,6 +253,7 @@ class BinaryScore:
         title_size: int = 14,
         axes_labels_size: int = 12,
         ax: Axes | None = None,
+        **kwargs,
     ) -> Axes:
         """Plot the ROC curve for the score. This curve depicts the True
         Positive Rate (Recall score) against the False Positive Rate.
@@ -275,6 +276,9 @@ class BinaryScore:
         ax : matplotlib Axes, optional
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
+        kwargs : key, value mappings
+            Other keyword arguments tp be passed through to
+            matplotlib.pyplot.plot().
 
         Returns
         -------
@@ -284,7 +288,7 @@ class BinaryScore:
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
 
-        ax.plot(self.false_positive_rates, self.recall_scores, label="Model")
+        ax.plot(self.false_positive_rates, self.recall_scores, label="Model", **kwargs)
 
         if plot_baseline:
             ax.plot((0, 1), (0, 1), c="red", ls="--", label="Random classifier")
