@@ -16,6 +16,7 @@ from easypred.utils import other_value
 
 if TYPE_CHECKING:
     from easypred import BinaryScore
+    from easypred.type_aliases import Vector
 
 
 class BinaryPrediction(Prediction):
@@ -35,8 +36,8 @@ class BinaryPrediction(Prediction):
 
     def __init__(
         self,
-        real_values: Union[np.ndarray, pd.Series, list],
-        fitted_values: Union[np.ndarray, pd.Series, list],
+        real_values: Vector,
+        fitted_values: Vector,
         value_positive: Any = 1,
     ):
         """Class to represent a generic prediction.

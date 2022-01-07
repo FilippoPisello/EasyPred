@@ -1,8 +1,9 @@
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 
-from easypred.type_aliases import VectorPdNp
+if TYPE_CHECKING:
+    from easypred.type_aliases import VectorPdNp
 
 
 def accuracy_score(real_values: VectorPdNp, fitted_values: VectorPdNp) -> float:

@@ -5,15 +5,16 @@ It allows to compute accuracy metrics that represent the distance between
 the prediction and the real values."""
 from __future__ import annotations
 
-from typing import Union
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib.axes import Axes
-from matplotlib.figure import Figure
 
 from easypred import Prediction
+
+if TYPE_CHECKING:
     from easypred.type_aliases import VectorPdNp
 
 

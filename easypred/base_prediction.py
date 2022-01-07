@@ -8,13 +8,15 @@ The subclasses allow for metrics that are relevant for just specific types
 of predictions."""
 from __future__ import annotations
 
-from typing import Union
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
 
-from easypred.type_aliases import VectorPdNp
 from easypred.utils import check_lengths_match, lists_to_nparray
+
+if TYPE_CHECKING:
+    from easypred.type_aliases import Vector, VectorPdNp
 
 
 class Prediction:
@@ -30,8 +32,8 @@ class Prediction:
 
     def __init__(
         self,
-        real_values: Union[np.ndarray, pd.Series, list],
-        fitted_values: Union[np.ndarray, pd.Series, list],
+        real_values: Vector,
+        fitted_values: Vector,
     ):
         """Class to represent a generic prediction.
 

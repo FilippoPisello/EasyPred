@@ -1,16 +1,17 @@
 from __future__ import annotations
 
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 import pandas as pd
 
-from easypred.type_aliases import Vector, VectorPdNp
+if TYPE_CHECKING:
+    from easypred.type_aliases import Vector, VectorPdNp
 
 
 def lists_to_nparray(
     *listlike_inputs: Vector,
-) -> Union[VectorPdNp, tuple[VectorPdNp, ...]]:
+) -> VectorPdNp | tuple[VectorPdNp, ...]:
     """For each passed element, if it is not of type np.array or pd.Series
     it gets coerced to np.array. Otherwise, it is left unchanged.
 

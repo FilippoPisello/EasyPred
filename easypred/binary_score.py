@@ -5,14 +5,17 @@ viewed as the step before BinaryPrediction.
 It allows to compute AUC score and other metrics that depend on the convertion
 threshold as arrays."""
 from __future__ import annotations
-from typing import Any, Callable, Union
+
+from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
 import pandas as pd
 
 from easypred import BinaryPrediction
-from easypred.type_aliases import Vector, VectorPdNp
 from easypred.utils import check_lengths_match, lists_to_nparray, other_value
+
+if TYPE_CHECKING:
+    from easypred.type_aliases import Vector, VectorPdNp
 
 
 class BinaryScore:
