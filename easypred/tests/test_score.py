@@ -147,3 +147,12 @@ def test_best_threshold_fails():
 def test_to_binary(score, decimals, threshold, expected):
     score.computation_decimals = decimals
     assert score.to_binary_prediction(threshold=threshold) == expected
+
+
+def test_plot_does_not_fail():
+    try:
+        score1.plot_roc_curve()
+        score1.plot_roc_curve(show_legend=False)
+        score1.plot_roc_curve(plot_baseline=False)
+    except Exception as e:
+        assert False, f"plot_roc_curve() raised an exception {e}"

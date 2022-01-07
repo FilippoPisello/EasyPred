@@ -10,6 +10,8 @@ from typing import TYPE_CHECKING, Any, Callable
 
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
+from matplotlib.axes import Axes
 
 from easypred import BinaryPrediction
 from easypred.utils import check_lengths_match, lists_to_nparray, other_value
@@ -208,9 +210,7 @@ class BinaryScore:
 
         return self.unique_scores[numb]
 
-    def to_binary_prediction(
-        self, threshold: float | str = 0.5
-    ) -> BinaryPrediction:
+    def to_binary_prediction(self, threshold: float | str = 0.5) -> BinaryPrediction:
         """Create an instance of BinaryPrediction from the BinaryScore object.
 
         Parameters
@@ -244,3 +244,57 @@ class BinaryScore:
         )
         binpred.threshold = threshold
         return binpred
+
+    def plot_roc_curve(
+        self,
+        figsize: tuple[int, int] = (20, 10),
+        plot_baseline: bool = True,
+        show_legend: bool = True,
+        title_size: int = 14,
+        axes_labels_size: int = 12,
+        ax: Axes | None = None,
+    ) -> Axes:
+        """Plot the ROC curve for the score. This curve depicts the True
+        Positive Rate (Recall score) against the False Positive Rate.
+
+        Parameters
+        ----------
+        figsize : tuple[int, int], optional
+            Tuple of integers specifying the size of the plot. Default is
+            (20, 10).
+        plot_baseline : bool, optional
+            If True, a reference straight line with slope 1 is added to the
+            plot, representing the performance of a random classifier. By
+            default is True.
+        show_legend : bool, optional
+            If True, show the plot's legend. By default is True.
+        title_size : int, optional
+            Font size of the plot title. Default is 14.
+        axes_labels_size : int, optional
+            Font size of the axes labels. Default is 12.
+        ax : matplotlib Axes, optional
+            Axes object to draw the plot onto, otherwise creates new Figure
+            and Axes. Use this option to further customize the plot.
+
+        Returns
+        -------
+        matplotlib Axes
+            Matplotlib Axes object with the plot drawn on it.
+        """
+        if ax is None:
+            _, ax = plt.subplots(figsize=figsize)
+
+        ax.plot(self.false_positive_rates, self.recall_scores, label="Model")
+
+        if plot_baseline:
+            ax.plot((0, 1), (0, 1), c="red", ls="--", label="Random classifier")
+
+        ax.set_title("ROC Curve", fontsize=title_size)
+        ax.set_xlabel("False Positive Rate", fontsize=axes_labels_size)
+        ax.set_ylabel("True Positive Rate", fontsize=axes_labels_size)
+
+        ax.grid(True, ls="--")
+        if show_legend:
+            ax.legend(fontsize=axes_labels_size)
+
+        return ax
