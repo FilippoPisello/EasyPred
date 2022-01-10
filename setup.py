@@ -10,6 +10,9 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/FilippoPisello/EasyPred",
+    project_urls={
+        "Documentation": "https://readthedocs.org/projects/easypred/",
+    },
     author="Filippo Pisello",
     author_email="filippo.pisello@live.it",
     license="MIT",
