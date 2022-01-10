@@ -163,4 +163,4 @@ def test_score_hist_does_not_fail():
         score1.plot_score_histogram()
         score1.plot_score_histogram(bins=5)
     except Exception as e:
-        assert False, f"plot_roc_curve() raised an exception {e}"
+        assert False, f"plot_score_histogram() raised an exception {e}"
