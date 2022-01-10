@@ -344,3 +344,88 @@ class BinaryScore:
         ax.grid(True, ls="--")
 
         return ax
+
+    def plot_metric(
+        self,
+        metric: BinaryMetricFunction | list[BinaryMetricFunction],
+        figsize: tuple[int, int] = (20, 10),
+        show_legend: bool = True,
+        title_size: int = 14,
+        axes_labels_size: int = 12,
+        ax: Axes | None = None,
+        **kwargs,
+    ) -> Axes:
+        """Plot the variation for one or more metrics given different values
+        for the threshold telling "1s" from "0s".
+
+        Parameters
+        ----------
+        metric : Metric function | list[Metric functions]
+            A function from easypred.metrics or a list of such functions. It
+            defines which values are to be plotted.
+        figsize : tuple[int, int], optional
+            Tuple of integers specifying the size of the plot. Default is
+            (20, 10).
+        show_legend : bool, optional
+            If True, show the plot's legend. By default is True.
+        title_size : int, optional
+            Font size of the plot title. Default is 14.
+        axes_labels_size : int, optional
+            Font size of the axes labels. Default is 12.
+        ax : matplotlib Axes, optional
+            Axes object to draw the plot onto, otherwise creates new Figure
+            and Axes. Use this option to further customize the plot.
+        kwargs : key, value mappings
+            Other keyword arguments tp be passed through to
+            matplotlib.pyplot.hist().
+
+        Returns
+        -------
+        matplotlib Axes
+            Matplotlib Axes object with the plot drawn on it.
+
+        Examples
+        -------
+        With one metric
+        >>> real = [0, 1, 1, 0, 1, 0]
+        >>> fit = [0.31, 0.44, 0.73, 0.28, 0.37, 0.18]
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore(real, fit, value_positive=1)
+        >>> from easypred.metrics import accuracy_score
+        >>> score.plot_metric(metric=accuracy_score)
+        <AxesSubplot:title={'center':'accuracy_score given different thresholds'},
+        xlabel='Threshold', ylabel='Metric value'>
+        >>> from matplotlib import pyplot as plt
+        >>> plt.show()
+
+        Adding a second metric
+        >>> from easypred.metrics import f1_score
+        >>> score.plot_metrics(metric=[accuracy_score, f1_score])
+        <AxesSubplot:title={'center':'accuracy_score & f1_score given different thresholds'},
+        xlabel='Threshold', ylabel='Metric value'>
+        >>> plt.show()
+        """
+        if ax is None:
+            _, ax = plt.subplots(figsize=figsize)
+
+        if not isinstance(metric, list):
+            metric = [metric]
+        for met in metric:
+            metric_values = self._metric_array(met, value_positive=self.value_positive)
+            ax.plot(
+                self.unique_scores,
+                metric_values,
+                label=met.__name__,
+                **kwargs,
+            )
+
+        names = " & ".join([x.__name__ for x in metric])
+        ax.set_title(f"{names} given different thresholds", fontsize=title_size)
+        ax.set_xlabel("Threshold", fontsize=axes_labels_size)
+        ax.set_ylabel("Metric value", fontsize=axes_labels_size)
+
+        ax.grid(True, ls="--")
+        if show_legend:
+            ax.legend(fontsize=axes_labels_size)
+
+        return ax

@@ -164,3 +164,13 @@ def test_score_hist_does_not_fail():
         score1.plot_score_histogram(bins=5)
     except Exception as e:
         assert False, f"plot_score_histogram() raised an exception {e}"
+
+
+def test_plot_metric_does_not_fail():
+    from easypred.metrics import accuracy_score, f1_score
+
+    try:
+        score1.plot_metric(metric=accuracy_score)
+        score1.plot_metric(metric=[accuracy_score, f1_score], figsize=(4, 4))
+    except Exception as e:
+        assert False, f"plot_metric() raised an exception {e}"
