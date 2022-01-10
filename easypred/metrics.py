@@ -8,7 +8,9 @@ if TYPE_CHECKING:
     from easypred.type_aliases import VectorPdNp
 
 
-def accuracy_score(real_values: VectorPdNp, fitted_values: VectorPdNp) -> float:
+def accuracy_score(
+    real_values: VectorPdNp, fitted_values: VectorPdNp, value_positive: Any = 1
+) -> float:
     """Return a float representing the percent of items which are equal
     between the real and the fitted values.
 
@@ -20,6 +22,10 @@ def accuracy_score(real_values: VectorPdNp, fitted_values: VectorPdNp) -> float:
         Array containing the true values.
     fitted_values : numpy array | pandas series
         Array containing the predicted values.
+    value_positive: Any, optional
+        This argument has no effect and it is ignored by the function. It is
+        present so that all the binary metrics have the same interface.
+        By default is 1.
 
     Returns
     -------

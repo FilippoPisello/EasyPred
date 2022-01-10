@@ -17,7 +17,7 @@ from easypred import BinaryPrediction
 from easypred.utils import check_lengths_match, lists_to_nparray, other_value
 
 if TYPE_CHECKING:
-    from easypred.type_aliases import Vector, VectorPdNp
+    from easypred.type_aliases import BinaryMetricFunction, Vector, VectorPdNp
 
 
 class BinaryScore:
@@ -157,7 +157,7 @@ class BinaryScore:
         return self._metric_array(f1_score, value_positive=self.value_positive)
 
     def _metric_array(
-        self, metric_function: Callable[..., float], **kwargs
+        self, metric_function: BinaryMetricFunction, **kwargs
     ) -> np.ndarray:
         """Return an array containing the passed metric calculated setting the
         threshold for each unique score value.
@@ -267,8 +267,6 @@ class BinaryScore:
             If True, a reference straight line with slope 1 is added to the
             plot, representing the performance of a random classifier. By
             default is True.
-        show_legend : bool, optional
-            If True, show the plot's legend. By default is True.
         title_size : int, optional
             Font size of the plot title. Default is 14.
         axes_labels_size : int, optional
