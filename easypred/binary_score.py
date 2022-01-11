@@ -27,6 +27,9 @@ class BinaryScore:
 
     Attributes
     -------
+    computation_decimals: int
+        The number of decimal places to be considered when rounding probability
+        scores to obtain the unique values.
     fitted_scores: np.ndarray | pd.Series
         The array-like object of length N containing the probability scores.
     real_values: np.ndarray | pd.Series
@@ -35,6 +38,21 @@ class BinaryScore:
         The value in the data that corresponds to 1 in the boolean logic.
         It is generally associated with the idea of "positive" or being in
         the "treatment" group. By default is 1.
+
+    Examples
+    -------
+    >>> from easypred import BinaryScore
+    >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+    ...                     [0.31, 0.44, 0.24, 0.28, 0.37, 0.18],
+    ...                     value_positive=1)
+    >>> score.real_values
+    array([0, 1, 1, 0, 1, 0])
+    >>> score.fitted_scores
+    array([0.31, 0.44, 0.24, 0.28, 0.37, 0.18])
+    >>> score.value_positive
+    1
+    >>> score.computation_decimals
+    3
     """
 
     def __init__(
@@ -43,7 +61,8 @@ class BinaryScore:
         fitted_scores: Vector,
         value_positive: Any = 1,
     ):
-        """Class to represent a prediction in terms of probability estimates.
+        """Create a BinaryScore object to represent a prediction in terms of
+        probability estimates.
 
         Arguments
         -------
@@ -58,6 +77,12 @@ class BinaryScore:
             The value in the data that corresponds to 1 in the boolean logic.
             It is generally associated with the idea of "positive" or being in
             the "treatment" group. By default is 1.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> BinaryScore([0, 1, 1, 0, 1, 0], [0.31, 0.44, 0.24, 0.28, 0.37, 0.18])
+        <easypred.binary_score.BinaryScore object at 0x000001E8AD923430>
         """
         self.real_values, self.fitted_scores = lists_to_nparray(
             real_values, fitted_scores
@@ -84,7 +109,17 @@ class BinaryScore:
 
     @property
     def value_negative(self) -> Any:
-        """Return the value that it is not the positive value."""
+        """Return the value that it is not the positive value.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.24, 0.28, 0.37, 0.18],
+        ...                     value_positive=1)
+        >>> score.value_negative
+        0
+        """
         return other_value(self.real_values, self.value_positive)
 
     @property
@@ -97,6 +132,15 @@ class BinaryScore:
         np.ndarray | pd.Series
             The array containing the sorted unique values. Its type matches
             fitted_scores' type.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.24, 0.28, 0.37, 0.24],
+        ...                     value_positive=1)
+        >>> score.unique_scores
+        array([0.24, 0.28, 0.31, 0.37, 0.44])
         """
         scores = np.unique(self.fitted_scores.round(self.computation_decimals))
 
@@ -121,6 +165,17 @@ class BinaryScore:
         np.ndarray | pd.Series
             The array containing the inferred fitted values. Its type matches
             fitted_scores' type.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.24, 0.28, 0.37, 0.24],
+        ...                     value_positive=1)
+        >>> score.score_to_values(threshold=0.6)
+        array([0, 0, 0, 0, 0, 0])
+        >>> score.score_to_values(threshold=0.31)
+        array([1, 1, 0, 0, 1, 0])
         """
         return np.where(
             (self.fitted_scores >= threshold),
@@ -131,13 +186,42 @@ class BinaryScore:
     @property
     def auc_score(self) -> float:
         """Return the Area Under the Receiver Operating Characteristic Curve
-        (ROC AUC)."""
+        (ROC AUC).
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.24, 0.28, 0.37, 0.24],
+        ...                     value_positive=1)
+        >>> score.auc_score
+        0.7222222222222222
+        """
         return np.abs(np.trapz(self.recall_scores, self.false_positive_rates))
 
     @property
     def accuracy_scores(self) -> np.ndarray:
         """Return an array containing the accuracy scores calculated setting the
-        threshold for each unique score value."""
+        threshold for each unique score value.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.accuracy_scores
+        array([0.5       , 0.66666667, 0.5       , 0.66666667, 0.83333333,
+               0.66666667])
+
+        Note that the length of the array changes if the number of decimals
+        used in the computation of unique values is lowered to 2. This is
+        because 0.241 and 0.244 establish a unique threshold equal to 0.24.
+
+        >>> score.computation_decimals = 2
+        >>> score.accuracy_scores
+        array([0.5       , 0.5       , 0.66666667, 0.83333333, 0.66666667])
+        """
         from easypred.metrics import accuracy_score
 
         return self._metric_array(accuracy_score)
@@ -145,7 +229,26 @@ class BinaryScore:
     @property
     def false_positive_rates(self) -> np.ndarray:
         """Return an array containing the false positive rates calculated
-        setting the threshold for each unique score value."""
+        setting the threshold for each unique score value.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.false_positive_rates
+        array([1.        , 0.66666667, 0.66666667, 0.33333333, 0.        ,
+               0.        ])
+
+        Note that the length of the array changes if the number of decimals
+        used in the computation of unique values is lowered to 2. This is
+        because 0.241 and 0.244 establish a unique threshold equal to 0.24.
+
+        >>> score.computation_decimals = 2
+        >>> score.false_positive_rates
+        array([1.        , 0.66666667, 0.33333333, 0.        , 0.        ])
+        """
         from easypred.metrics import false_positive_rate
 
         return self._metric_array(
@@ -155,7 +258,26 @@ class BinaryScore:
     @property
     def recall_scores(self) -> np.ndarray:
         """Return an array containing the recall scores calculated setting the
-        threshold for each unique score value."""
+        threshold for each unique score value.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.recall_scores
+        array([1.        , 1.        , 0.66666667, 0.66666667, 0.66666667,
+               0.33333333])
+
+        Note that the length of the array changes if the number of decimals
+        used in the computation of unique values is lowered to 2. This is
+        because 0.241 and 0.244 establish a unique threshold equal to 0.24.
+
+        >>> score.computation_decimals = 2
+        >>> score.recall_scores
+        array([1.        , 0.66666667, 0.66666667, 0.66666667, 0.33333333])
+        """
         from easypred.metrics import recall_score
 
         return self._metric_array(recall_score, value_positive=self.value_positive)
@@ -163,7 +285,26 @@ class BinaryScore:
     @property
     def f1_scores(self) -> np.ndarray:
         """Return an array containing the f1 scores calculated setting the
-        threshold for each unique score value."""
+        threshold for each unique score value.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.f1_scores
+        array([0.66666667, 0.75      , 0.57142857, 0.66666667, 0.8       ,
+               0.5       ])
+
+        Note that the length of the array changes if the number of decimals
+        used in the computation of unique values is lowered to 2. This is
+        because 0.241 and 0.244 establish a unique threshold equal to 0.24.
+
+        >>> score.computation_decimals = 2
+        >>> score.f1_scores
+        array([0.66666667, 0.57142857, 0.66666667, 0.8       , 0.5       ])
+        """
         from easypred.metrics import f1_score
 
         return self._metric_array(f1_score, value_positive=self.value_positive)
@@ -209,6 +350,15 @@ class BinaryScore:
         -------
         float
             The threshold that maximizes the indicator specified.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.best_threshold(criterion="f1")
+        0.37
         """
         if criterion == "f1":
             numb = np.argmax(self.f1_scores)
@@ -246,6 +396,15 @@ class BinaryScore:
             specific for predictions with just two outcomes. The class instance
             is given the special attribute "threshold" that returns the
             threshold used in the convertion.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.to_binary_prediction(threshold=0.37)
+        <easypred.binary_prediction.BinaryPrediction object at 0x000001E8C813FAF0>
         """
         if isinstance(threshold, str):
             threshold = self.best_threshold(criterion=threshold)
@@ -327,6 +486,18 @@ class BinaryScore:
         -------
         matplotlib Axes
             Matplotlib Axes object with the plot drawn on it.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.plot_roc_curve()
+        <AxesSubplot:title={'center':'ROC Curve'},
+        xlabel='False Positive Rate', ylabel='True Positive Rate'>
+        >>> from matplotlib import pyplot as plt
+        >>> plt.show()
         """
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
@@ -376,6 +547,24 @@ class BinaryScore:
         -------
         matplotlib Axes
             Matplotlib Axes object with the plot drawn on it.
+
+        Examples
+        -------
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore([0, 1, 1, 0, 1, 0],
+        ...                     [0.31, 0.44, 0.244, 0.28, 0.37, 0.241],
+        ...                     value_positive=1)
+        >>> score.plot_score_histogram()
+        <AxesSubplot:title={'center':'Fitted Scores Distribution'},
+        xlabel='Fitted Scores', ylabel='Frequency'>
+        >>> from matplotlib import pyplot as plt
+        >>> plt.show()
+
+        Passing keyword arguments to matplotlib's hist function:
+
+        >>> score.plot_score_histogram(bins=10)
+        <AxesSubplot:title={'center':'Fitted Scores Distribution'},
+        xlabel='Fitted Scores', ylabel='Frequency'>
         """
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
