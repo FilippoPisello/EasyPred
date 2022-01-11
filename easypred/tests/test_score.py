@@ -208,6 +208,26 @@ def test_to_binary(score, decimals, threshold, expected):
     assert score.to_binary_prediction(threshold=threshold) == expected
 
 
+def test_describe():
+    real = [0, 1, 1, 0, 1, 0]
+    fit = [0.31, 0.44, 0.73, 0.28, 0.37, 0.18]
+    score = BinaryScore(real, fit, value_positive=1)
+    result = score.describe()
+    exp = pd.DataFrame(
+        {"Value": [6.00, 0.73, 1.00, 1.00, 0.37, 1.00, 0.37]},
+        index=[
+            "N",
+            "Max fitted score",
+            "AUC score",
+            "Max accuracy",
+            "Thresh max accuracy",
+            "Max F1 score",
+            "Thresh max F1 score",
+        ],
+    )
+    pd.testing.assert_frame_equal(result, exp)
+
+
 def test_auc_plot_does_not_fail():
     try:
         score1.plot_roc_curve()

@@ -257,6 +257,39 @@ class BinaryScore:
         binpred.threshold = threshold
         return binpred
 
+    def describe(self) -> pd.DataFrame:
+        """Return a dataframe containing some key information about the
+        prediction.
+
+        Examples
+        -------
+        >>> real = [0, 1, 1, 0, 1, 0]
+        >>> fit = [0.31, 0.44, 0.24, 0.28, 0.37, 0.18]
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore(real, fit, value_positive=1)
+        >>> score.describe()
+                                Value
+        N                    6.000000
+        Max fitted score     0.440000
+        AUC score            0.777778
+        Max accuracy         0.833333
+        Thresh max accuracy  0.370000
+        Max F1 score         0.800000
+        Thresh max F1 score  0.370000
+        """
+        return pd.DataFrame(
+            {
+                "N": [len(self)],
+                "Max fitted score": [self.fitted_scores.max()],
+                "AUC score": [self.auc_score],
+                "Max accuracy": [self.accuracy_scores.max()],
+                "Thresh max accuracy": [self.best_threshold(criterion="accuracy")],
+                "Max F1 score": [self.f1_scores.max()],
+                "Thresh max F1 score": [self.best_threshold(criterion="f1")],
+            },
+            index=["Value"],
+        ).transpose()
+
     def plot_roc_curve(
         self,
         figsize: tuple[int, int] = (20, 10),
@@ -399,6 +432,7 @@ class BinaryScore:
         Examples
         -------
         With one metric
+
         >>> real = [0, 1, 1, 0, 1, 0]
         >>> fit = [0.31, 0.44, 0.73, 0.28, 0.37, 0.18]
         >>> from easypred import BinaryScore
@@ -411,6 +445,7 @@ class BinaryScore:
         >>> plt.show()
 
         Adding a second metric
+
         >>> from easypred.metrics import f1_score
         >>> score.plot_metrics(metric=[accuracy_score, f1_score])
         <AxesSubplot:title={'center':'accuracy_score & f1_score given different thresholds'},
