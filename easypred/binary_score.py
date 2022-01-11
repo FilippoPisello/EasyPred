@@ -70,6 +70,18 @@ class BinaryScore:
             self.real_values, self.fitted_scores, "Real values", "Fitted scores"
         )
 
+    def __str__(self):
+        return self.fitted_scores.__str__()
+
+    def __len__(self):
+        return len(self.fitted_scores)
+
+    def __eq__(self, other):
+        return np.all(self.fitted_scores == other.fitted_scores)
+
+    def __ne__(self, other):
+        return np.any(self.fitted_scores != other.fitted_scores)
+
     @property
     def value_negative(self) -> Any:
         """Return the value that it is not the positive value."""

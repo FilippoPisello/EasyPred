@@ -13,6 +13,65 @@ def test_value_negative():
 
 
 @pytest.mark.parametrize(
+    "real, fitted, length",
+    [
+        ([0, 1, 1], [0, 0.2, 0.3], 3),
+        ([0, 1, 1, 1], [0, 0.2, 0.3, 0.5], 4),
+    ],
+)
+def test_length(real, fitted, length):
+    assert len(BinaryScore(real, fitted)) == length
+
+
+@pytest.mark.parametrize(
+    "score1, score2, is_equal",
+    [
+        (
+            BinaryScore([0, 1, 1], [0, 0.2, 0.3]),
+            BinaryScore([0, 1, 1], [0, 0.2, 0.3]),
+            True,
+        ),
+        (
+            BinaryScore([0, 1, 1], [0.5, 0.5, 0.5]),
+            BinaryScore([0, 1, 1], [0, 0.2, 0.3]),
+            False,
+        ),
+    ],
+)
+def test_equal(score1, score2, is_equal):
+    if is_equal:
+        assert score1 == score2
+    else:
+        assert not (score1 == score2)
+
+
+@pytest.mark.parametrize(
+    "score1, score2, is_not_equal",
+    [
+        (
+            BinaryScore([0, 1, 1], [0, 0.2, 0.3]),
+            BinaryScore([0, 1, 1], [0, 0.2, 0.3]),
+            False,
+        ),
+        (
+            BinaryScore([0, 1, 1], [0.5, 0.5, 0.5]),
+            BinaryScore([0, 1, 1], [0, 0.2, 0.3]),
+            True,
+        ),
+    ],
+)
+def test_not_equal(score1, score2, is_not_equal):
+    if is_not_equal:
+        assert score1 != score2
+    else:
+        assert not (score1 != score2)
+
+
+def test_str():
+    assert score1.__str__() == score1.fitted_scores.__str__()
+
+
+@pytest.mark.parametrize(
     "score, decimals, expected",
     [
         (score1, 2, np.array([0.25, 0.34, 0.66, 0.79])),
