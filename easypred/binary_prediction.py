@@ -20,7 +20,8 @@ if TYPE_CHECKING:
 
 
 class BinaryPrediction(Prediction):
-    """Class to represent a binary prediction.
+    """Subclass of Prediction specialized in representing numeric categorical
+    predictions with binary outcome.
 
     Attributes
     -------

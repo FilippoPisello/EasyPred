@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 
 class NumericPrediction(Prediction):
-    """Class to represent a numerical prediction.
+    """Subclass of Prediction specialized in representing numeric predictions.
 
     Attributes
     -------
@@ -27,6 +27,15 @@ class NumericPrediction(Prediction):
         The array-like object of length N containing the fitted values.
     real_values: np.ndarray | pd.Series
         The array-like object containing the N real values.
+
+    Examples
+    -------
+    >>> from easypred import NumericPrediction
+    >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+    >>> pred.real_values
+    array([7, 1, 3, 4, 5])
+    >>> pred.fitted_values
+    array([6.5, 2. , 4. , 3. , 5. ])
     """
 
     @property
@@ -36,7 +45,15 @@ class NumericPrediction(Prediction):
 
         References
         ---------
-        https://en.wikipedia.org/wiki/Coefficient_of_determination"""
+        https://en.wikipedia.org/wiki/Coefficient_of_determination
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.r_squared
+        0.8616803278688523
+        """
         return np.corrcoef(self.real_values, self.fitted_values)[0, 1] ** 2
 
     @property
@@ -45,7 +62,15 @@ class NumericPrediction(Prediction):
 
         References
         ---------
-        https://en.wikipedia.org/wiki/Mean_squared_error"""
+        https://en.wikipedia.org/wiki/Mean_squared_error
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.mse
+        0.65
+        """
         return np.mean(self.residuals(squared=True))
 
     @property
@@ -54,7 +79,15 @@ class NumericPrediction(Prediction):
 
         References
         ---------
-        https://en.wikipedia.org/wiki/Root-mean-square_deviation"""
+        https://en.wikipedia.org/wiki/Root-mean-square_deviation
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.rmse
+        0.806225774829855
+        """
         return np.sqrt(self.mse)
 
     @property
@@ -63,7 +96,15 @@ class NumericPrediction(Prediction):
 
         References
         ---------
-        https://en.wikipedia.org/wiki/Mean_absolute_error"""
+        https://en.wikipedia.org/wiki/Mean_absolute_error
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.mae
+        0.7
+        """
         return np.mean(self.residuals(absolute=True))
 
     @property
@@ -72,7 +113,15 @@ class NumericPrediction(Prediction):
 
         References
         ---------
-        https://en.wikipedia.org/wiki/Mean_absolute_percentage_error"""
+        https://en.wikipedia.org/wiki/Mean_absolute_percentage_error
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.mape
+        0.33095238095238094
+        """
         return np.mean(self.residuals(absolute=True, relative=True))
 
     def residuals(
@@ -99,6 +148,21 @@ class NumericPrediction(Prediction):
         np.ndarray or pd.Series
             Numpy array or pandas series depending on the type of real_values and
             fitted_values. Its shape is (N,).
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.residuals()
+        array([ 0.5, -1. , -1. ,  1. ,  0. ])
+        >>> pred.residuals(squared=True)
+        array([0.25, 1.  , 1.  , 1.  , 0.  ])
+        >>> pred.residuals(absolute=True)
+        array([0.5, 1. , 1. , 1. , 0. ])
+        >>> pred.residuals(relative=True)
+        array([ 0.07142857, -1.        , -0.33333333,  0.25      ,  0.        ])
+        >>> pred.residuals(relative=True, absolute=True)
+        array([0.07142857, 1.        , 0.33333333, 0.25      , 0.        ])
         """
         residuals = self.real_values - self.fitted_values
         if relative:
@@ -112,12 +176,67 @@ class NumericPrediction(Prediction):
     def matches_tolerance(self, tolerance: float = 0.0) -> VectorPdNp:
         """Return a boolean array of length N with True where the distance
         between the real values and the fitted values is inferior to a
-        given parameter."""
+        given parameter
+
+        Parameters
+        ----------
+        tolerance : float, optional
+            The maximum absolute difference between the real value and its
+            fitted counterpart such that the pair considered a match. By
+            default is 0.0.
+
+        Returns
+        -------
+        np.ndarray or pd.Series
+            Boolean array of shape (N,). Its type reflects the type of
+            self.real_values.
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.matches_tolerance()
+        array([False, False, False, False,  True])
+        >>> pred.matches_tolerance(tolerance=2)
+        array([ True,  True,  True,  True,  True])
+
+        With pandas series:
+
+        >>> import pandas as pd
+        >>> pred = NumericPrediction(pd.Series([7, 1, 3, 4, 5]),
+        ...                          pd.Series([6.5, 2, 4, 3, 5]))
+        >>> pred.matches_tolerance(tolerance=2)
+        0    True
+        1    True
+        2    True
+        3    True
+        4    True
+        dtype: bool
+        """
         return abs(self.real_values - self.fitted_values) <= tolerance
 
     def as_dataframe(self) -> pd.DataFrame:
         """Return prediction as a dataframe containing various information over
-        the prediction quality."""
+        the prediction quality.
+
+        Returns
+        -------
+        pd.DataFrame
+            Dataframe of shape (N, 5) containing summary information for each
+            observation's prediction.
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.as_dataframe()
+           Fitted Values  Real Values  Prediction Matches  Absolute Difference  Relative Difference
+        0            6.5            7               False                  0.5             0.071429
+        1            2.0            1               False                 -1.0            -1.000000
+        2            4.0            3               False                 -1.0            -0.333333
+        3            3.0            4               False                  1.0             0.250000
+        4            5.0            5                True                  0.0             0.000000
+        """
         residuals = self.residuals()
         data = {
             "Fitted Values": self.fitted_values,
@@ -130,7 +249,27 @@ class NumericPrediction(Prediction):
 
     def describe(self) -> pd.DataFrame:
         """Return a dataframe containing some key information about the
-        prediction."""
+        prediction.
+
+        Returns
+        -------
+        pd.DataFrame
+            Dataframe of shape (6, 1) containing summary information on the
+            prediction quality.
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.describe()
+                Value
+        N     5.000000
+        MSE   0.650000
+        RMSE  0.806226
+        MAE   0.700000
+        MAPE  0.330952
+        R^2   0.861680
+        """
         return pd.DataFrame(
             {
                 "N": [len(self)],
@@ -178,6 +317,19 @@ class NumericPrediction(Prediction):
         np.ndarray[matplotlib Axes, matplotlib Axes]
             NumPy array of shape (2,) containing one matplotlib Axes object for
             each of the subplots.
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.plot_fit_residuals()
+        array([<AxesSubplot:title={'center':'Real against fitted values'},
+               xlabel='Fitted values', ylabel='Real values'>,
+               <AxesSubplot:title={'center':'Residuals against fitted values'},
+               xlabel='Fitted values', ylabel='Residuals'>],
+            dtype=object)
+        >>> from matplotlib import pyplot as plt
+        >>> plt.show()
         """
         if axs is None:
             _, axs = plt.subplots(nrows=1, ncols=2, figsize=figsize)
@@ -221,6 +373,16 @@ class NumericPrediction(Prediction):
         -------
         matplotlib Axes
             Matplotlib Axes object with the plot drawn on it.
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.plot_residuals()
+        <AxesSubplot:title={'center':'Residuals against fitted values'},
+        xlabel='Fitted values', ylabel='Residuals'>
+        >>> from matplotlib import pyplot as plt
+        >>> plt.show()
         """
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
@@ -269,6 +431,16 @@ class NumericPrediction(Prediction):
         -------
         matplotlib Axes
             Matplotlib Axes object with the plot drawn on it.
+
+        Examples
+        -------
+        >>> from easypred import NumericPrediction
+        >>> pred = NumericPrediction([7, 1, 3, 4, 5], [6.5, 2, 4, 3, 5])
+        >>> pred.plot_fit()
+        <AxesSubplot:title={'center':'Real against fitted values'},
+        xlabel='Fitted values', ylabel='Real values'>
+        >>> from matplotlib import pyplot as plt
+        >>> plt.show()
         """
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
