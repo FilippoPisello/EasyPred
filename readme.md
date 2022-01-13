@@ -149,6 +149,7 @@ First we visualize the distribution of the fitted scores:
 ```python
 >>> score.plot_score_histogram()
 <AxesSubplot:title={'center':'Fitted Scores Distribution'}, xlabel='Fitted Scores', ylabel='Frequency'>
+>>> from matplotlib import pyplot as plt
 >>> plt.show()
 ```
 ![roc curve plot](readme_materials/hist.png)
@@ -163,7 +164,6 @@ To better understand the number the ROC curve can be plotted:
 ```python
 >>> score.plot_roc_curve()
 <AxesSubplot:title={'center':'ROC Curve'}, xlabel='False Positive Rate', ylabel='True Positive Rate'>
->>> from matplotlib import pyplot as plt
 >>> plt.show()
 ```
 ![roc curve plot](readme_materials/roc_curve.png)
