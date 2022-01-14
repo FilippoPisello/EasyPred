@@ -130,7 +130,29 @@ There are then a number of dedicated error and accuracy metrics:
 >>> num_pred.r_squared
 0.31250000000000017
 ```
-Use the `help()` function to get more information over the prediction objects and their functionalities.
+
+For a more complex scenario one may be interested into visualizing the residuals and prediction fit:
+```python
+# Setting up the example, creating the prediction
+>>> from sklearn import datasets, linear_model
+>>> diabetes_X, diabetes_y = datasets.load_diabetes(return_X_y=True)
+>>> regr = linear_model.LinearRegression()
+>>> regr.fit(diabetes_X, diabetes_y)
+LinearRegression()
+>>> diabetes_y_pred = regr.predict(diabetes_X)
+# Loading the prediction into easypred
+>>> from easypred import NumericPrediction
+>>> pred = NumericPrediction(diabetes_y, diabetes_y_pred)
+>>> pred.plot_fit_residuals()
+array([<AxesSubplot:title={'center':'Real against fitted values'},
+       xlabel='Fitted values', ylabel='Real values'>,
+       <AxesSubplot:title={'center':'Residuals against fitted values'},
+       xlabel='Fitted values', ylabel='Residuals'>],
+      dtype=object)
+>>> from matplotlib import pyplot as plt
+>>> plt.show()
+```
+![fit residuals plot](docs/source/images/fit_residuals.png)
 
 ### BinaryScore
 BinaryScore is to be used when working with probability scores, generally assigned in a 0-1 interval displaying the likelihood of an observation "of being 1".
@@ -152,7 +174,7 @@ First we visualize the distribution of the fitted scores:
 >>> from matplotlib import pyplot as plt
 >>> plt.show()
 ```
-![roc curve plot](readme_materials/hist.png)
+![roc curve plot](docs/source/images/hist.png)
 
 A key metric in this case is the AUC score:
 ```python
@@ -166,7 +188,7 @@ To better understand the number the ROC curve can be plotted:
 <AxesSubplot:title={'center':'ROC Curve'}, xlabel='False Positive Rate', ylabel='True Positive Rate'>
 >>> plt.show()
 ```
-![roc curve plot](readme_materials/roc_curve.png)
+![roc curve plot](docs/source/images/roc_curve.png)
 
 Or one may want to know how the F1 score changes as the threshold to tell 1s from 0s takes different values:
 ```python
@@ -181,7 +203,7 @@ The same array can be plotted for a visual understanding:
 <AxesSubplot:title={'center':'f1_score given different thresholds'}, xlabel='Threshold', ylabel='Metric value'>
 >>> plt.show()
 ```
-![roc curve plot](readme_materials/f1_score.png)
+![roc curve plot](docs/source/images/f1_score.png)
 
 To get a summary:
 ```python
