@@ -6,9 +6,9 @@
 [![Documentation Status](https://readthedocs.org/projects/easypred/badge/?version=latest)](https://easypred.readthedocs.io/en/latest/?badge=latest)
 [![PyPi](https://badgen.net/badge/icon/pypi?icon=pypi&label)](https://pypi.org/project/easypred/)
 ## What is it?
-EasyPred is a Python package that allows to easily store, investigate, assess and compare the predictions obtained through your Machine Learning models.
+EasyPred is a Python package to easily store, analyse, assess and compare predictions from Machine Learning and Data Mining models.
 
-The package allows to create different types of model-agnostic prediction objects simply by passing the real and fitted data. These objects have properties and methods that return various accuracy and error metrics.
+The package allows to create different types of model-agnostic prediction objects simply by passing real and fitted data. These objects have properties and methods that return various accuracy and error metrics, together with relevant plots.
 
 Why EasyPred can be useful:
 - **All-in-one bundle**: having data and accuracy metrics in a single object means less stuff you need to keep an eye on

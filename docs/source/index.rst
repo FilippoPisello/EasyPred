@@ -3,14 +3,13 @@ Welcome to EasyPred's documentation!
 
 What is it?
 --------------------------------
-EasyPred is a Python package that allows to
-easily store, investigate, assess and compare the predictions obtained
-through your Machine Learning models.
+EasyPred is a Python package to easily store, analyse, assess and compare
+predictions from Machine Learning and Data Mining models.
 
-The package allows to create different types of model-agnostic
-prediction objects simply by passing the real and fitted data. These
-objects have properties and methods that return various accuracy and
-error metrics.
+The package allows to create different types of model-agnostic prediction
+objects simply by passing real and fitted data. These objects have properties
+and methods that return various accuracy and error metrics, together with
+relevant plots.
 
 Why EasyPred can be useful:
 
