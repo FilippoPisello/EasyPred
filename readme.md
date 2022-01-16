@@ -152,7 +152,7 @@ array([<AxesSubplot:title={'center':'Real against fitted values'},
 >>> from matplotlib import pyplot as plt
 >>> plt.show()
 ```
-![fit residuals plot](docs/source/images/fit_residuals.png)
+![fit residuals plot](https://github.com/FilippoPisello/EasyPred/blob/main/docs/source/images/fit_residuals.png?raw=true)
 
 ### BinaryScore
 BinaryScore is to be used when working with probability scores, generally assigned in a 0-1 interval displaying the likelihood of an observation "of being 1".
@@ -174,7 +174,7 @@ First we visualize the distribution of the fitted scores:
 >>> from matplotlib import pyplot as plt
 >>> plt.show()
 ```
-![roc curve plot](docs/source/images/hist.png)
+![histogram](https://github.com/FilippoPisello/EasyPred/blob/main/docs/source/images/hist.png?raw=true)
 
 A key metric in this case is the AUC score:
 ```python
@@ -188,7 +188,7 @@ To better understand the number the ROC curve can be plotted:
 <AxesSubplot:title={'center':'ROC Curve'}, xlabel='False Positive Rate', ylabel='True Positive Rate'>
 >>> plt.show()
 ```
-![roc curve plot](docs/source/images/roc_curve.png)
+![roc curve plot](https://github.com/FilippoPisello/EasyPred/blob/main/docs/source/images/roc_curve.png?raw=true)
 
 Or one may want to know how the F1 score changes as the threshold to tell 1s from 0s takes different values:
 ```python
@@ -203,7 +203,7 @@ The same array can be plotted for a visual understanding:
 <AxesSubplot:title={'center':'f1_score given different thresholds'}, xlabel='Threshold', ylabel='Metric value'>
 >>> plt.show()
 ```
-![roc curve plot](docs/source/images/f1_score.png)
+![f1 score plot](https://github.com/FilippoPisello/EasyPred/blob/main/docs/source/images/f1_score.png?raw=true)
 
 To get a summary:
 ```python

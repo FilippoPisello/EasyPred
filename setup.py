@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="easypred",
-    version="0.1.0",
+    version="0.1.1",
     description="Easily store, assess and compare predictions obtained through Machine Learning models.",
     long_description=long_description,
     long_description_content_type="text/markdown",
