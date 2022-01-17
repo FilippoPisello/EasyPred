@@ -29,6 +29,7 @@ EasyPred depends on the following libraries:
 
 *  NumPy
 *  pandas
+*  matplotlib
 
 Usage
 ~~~~~
