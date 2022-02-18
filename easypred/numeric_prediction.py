@@ -448,11 +448,13 @@ class NumericPrediction(Prediction):
         ax.scatter(self.fitted_values, self.real_values)
 
         if line_slope is not None:
-            ax.axline((0, 0), slope=line_slope, c="red", ls="--")
+            min_val = min([self.real_values.min(), self.fitted_values.min()]) * 0.95
+            ax.axline((min_val, min_val), slope=line_slope, c="red", ls="--")
 
         ax.set_title("Real against fitted values", fontsize=title_size)
         ax.set_xlabel("Fitted values", fontsize=axes_labels_size)
         ax.set_ylabel("Real values", fontsize=axes_labels_size)
+        ax.axis("equal")
 
         ax.grid(True, ls="--")
 
