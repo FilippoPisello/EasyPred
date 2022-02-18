@@ -178,6 +178,8 @@ class BinaryPrediction(Prediction):
 
         It measures how good the model is in detecting real positives.
 
+        Also called: sensitivity, hit rate, true positive rate.
+
         Examples
         -------
         >>> from easypred import BinaryPrediction
