@@ -372,6 +372,38 @@ class BinaryScore:
 
         return self.unique_scores[numb]
 
+    def pairs_count(self) -> pd.DataFrame:
+        """Return a dataframe containing the count of respectively concordant,
+        discordant and tied pairs.
+
+        Examples
+        -------
+        >>> real = [1, 0, 0, 1, 0]
+        >>> fit = [0.81, 0.31, 0.81, 0.73, 0.45]
+        >>> from easypred import BinaryScore
+        >>> score = BinaryScore(real, fit, value_positive=1)
+        >>> score.pairs_count()
+                                Count
+        Concordant                  4
+        Discordant                  1
+        Tied                        1
+        """
+        concordant = 0
+        discordant = 0
+        tied = 0
+
+        positive_only = self.real_values == self.value_positive
+
+        for score_one in self.fitted_scores[positive_only]:
+            concordant += (self.fitted_scores[~positive_only] < score_one).sum()
+            discordant += (self.fitted_scores[~positive_only] > score_one).sum()
+            tied += (self.fitted_scores[~positive_only] == score_one).sum()
+
+        return pd.DataFrame(
+            {"Count": [concordant, discordant, tied]},
+            index=["Concordant", "Discordant", "Tied"],
+        )
+
     def to_binary_prediction(self, threshold: float | str = 0.5) -> BinaryPrediction:
         """Create an instance of BinaryPrediction from the BinaryScore object.
 
