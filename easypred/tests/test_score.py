@@ -263,10 +263,11 @@ def test_plot_metric_does_not_fail():
 
 
 @pytest.mark.parametrize(
-    "score, expected",
+    "score, relative, expected",
     [
         (
             BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.85, 0.73, 0.45]),
+            False,
             pd.DataFrame(
                 [4, 2, 0],
                 columns=["Count"],
@@ -275,6 +276,7 @@ def test_plot_metric_does_not_fail():
         ),
         (
             BinaryScore([2, 0, 0, 2, 0], [0.81, 0.31, 0.85, 0.73, 0.45], 2),
+            False,
             pd.DataFrame(
                 [4, 2, 0],
                 columns=["Count"],
@@ -283,13 +285,24 @@ def test_plot_metric_does_not_fail():
         ),
         (
             BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.81, 0.73, 0.45]),
+            False,
             pd.DataFrame(
                 [4, 1, 1],
                 columns=["Count"],
                 index=["Concordant", "Discordant", "Tied"],
             ),
         ),
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.85, 0.73, 0.45]),
+            True,
+            pd.DataFrame(
+                [2 / 3, 1 / 3, 0],
+                columns=["Percentage"],
+                index=["Concordant", "Discordant", "Tied"],
+            ),
+        ),
     ],
 )
-def test_pairs(score, expected):
-    pd.testing.assert_frame_equal(score.pairs_count(), expected, check_dtype=False)
+def test_pairs(score, relative, expected):
+    actual = score.pairs_count(relative=relative)
+    pd.testing.assert_frame_equal(actual, expected, check_dtype=False)

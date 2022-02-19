@@ -372,9 +372,21 @@ class BinaryScore:
 
         return self.unique_scores[numb]
 
-    def pairs_count(self) -> pd.DataFrame:
+    def pairs_count(self, relative: bool = False) -> pd.DataFrame:
         """Return a dataframe containing the count of respectively concordant,
         discordant and tied pairs.
+
+        Parameters
+        ----------
+        relative : bool, optional
+            If True, return the relative percentage for the three types of pairs
+            instead that the absolute count. By default is False.
+
+        Returns
+        -------
+        pd.DataFrame
+            A dataframe of shape (3, 1) containing in one column the information
+            about concordant, discordant and tied pairs.
 
         Examples
         -------
@@ -383,24 +395,36 @@ class BinaryScore:
         >>> from easypred import BinaryScore
         >>> score = BinaryScore(real, fit, value_positive=1)
         >>> score.pairs_count()
-                                Count
-        Concordant                  4
-        Discordant                  1
-        Tied                        1
+                    Count
+        Concordant      4
+        Discordant      1
+        Tied            1
+        >>> score.pairs_count(relative=True)
+                    Percentage
+        Concordant    0.666667
+        Discordant    0.166667
+        Tied          0.166667
         """
-        concordant = 0
-        discordant = 0
-        tied = 0
+        measures = np.array([0, 0, 0])
 
         positive_only = self.real_values == self.value_positive
 
         for score_one in self.fitted_scores[positive_only]:
-            concordant += (self.fitted_scores[~positive_only] < score_one).sum()
-            discordant += (self.fitted_scores[~positive_only] > score_one).sum()
-            tied += (self.fitted_scores[~positive_only] == score_one).sum()
+            # Concordant
+            measures[0] += (self.fitted_scores[~positive_only] < score_one).sum()
+            # Discordant
+            measures[1] += (self.fitted_scores[~positive_only] > score_one).sum()
+            # Tied
+            measures[2] += (self.fitted_scores[~positive_only] == score_one).sum()
+
+        column = "Count"
+        if relative:
+            total_pairs = positive_only.sum() * (~positive_only).sum()
+            measures = measures / total_pairs
+            column = "Percentage"
 
         return pd.DataFrame(
-            {"Count": [concordant, discordant, tied]},
+            {column: measures},
             index=["Concordant", "Discordant", "Tied"],
         )
 
