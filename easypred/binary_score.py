@@ -373,8 +373,8 @@ class BinaryScore:
         return self.unique_scores[numb]
 
     def pairs_count(self, relative: bool = False) -> pd.DataFrame:
-        """Return a dataframe containing the count of respectively concordant,
-        discordant and tied pairs.
+        """Return a dataframe containing the count of concordant,
+        discordant, tied and total pairs.
 
         Parameters
         ----------
@@ -399,13 +399,15 @@ class BinaryScore:
         Concordant      4
         Discordant      1
         Tied            1
+        Total           6
         >>> score.pairs_count(relative=True)
                     Percentage
         Concordant    0.666667
         Discordant    0.166667
         Tied          0.166667
+        Total              1.0
         """
-        measures = np.array([0, 0, 0])
+        measures = np.array([0, 0, 0, 0])
 
         positive_only = self.real_values == self.value_positive
 
@@ -418,14 +420,17 @@ class BinaryScore:
             measures[2] += (self.fitted_scores[~positive_only] == score_one).sum()
 
         column = "Count"
-        if relative:
             total_pairs = positive_only.sum() * (~positive_only).sum()
+        measures[3] = total_pairs
+
+        if relative:
             measures = measures / total_pairs
             column = "Percentage"
 
         return pd.DataFrame(
             {column: measures},
-            index=["Concordant", "Discordant", "Tied"],
+            index=["Concordant", "Discordant", "Tied", "Total"],
+        )
         )
 
     def to_binary_prediction(self, threshold: float | str = 0.5) -> BinaryPrediction:
