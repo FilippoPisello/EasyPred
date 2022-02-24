@@ -27,6 +27,6 @@ setup(
     ],
     packages=find_packages(exclude="tests"),
     include_package_data=True,
-    install_requires=["numpy>=1.10", "pandas>=1.1.0", "matplotlib>=3"],
+    install_requires=["numpy>=1.10", "pandas>=1.1.0", "matplotlib>=3.3"],
     python_requires=">=3.7",
 )
