@@ -188,6 +188,10 @@ class BinaryScore:
         """Return the Area Under the Receiver Operating Characteristic Curve
         (ROC AUC).
 
+        It is computed using pairs properties as:  (Nc - 0.5 * Nt) / Ntot.
+        Where Nc is the number of concordant pairs, Ntot is the number of tied
+        pairs and Ntot is the total number of pairs.
+
         Examples
         -------
         >>> from easypred import BinaryScore
@@ -197,7 +201,10 @@ class BinaryScore:
         >>> score.auc_score
         0.7222222222222222
         """
-        return np.abs(np.trapz(self.recall_scores, self.false_positive_rates))
+        concordant_pairs = self.pairs_count().loc["Concordant", "Count"]
+        tied_pairs = self.pairs_count().loc["Tied", "Count"]
+        total_pairs = self.pairs_count().loc["Total", "Count"]
+        return (concordant_pairs - 0.5 * tied_pairs) / total_pairs
 
     @property
     def accuracy_scores(self) -> np.ndarray:
