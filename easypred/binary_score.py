@@ -427,7 +427,7 @@ class BinaryScore:
             measures[2] += (self.fitted_scores[~positive_only] == score_one).sum()
 
         column = "Count"
-            total_pairs = positive_only.sum() * (~positive_only).sum()
+        total_pairs = positive_only.sum() * (~positive_only).sum()
         measures[3] = total_pairs
 
         if relative:
@@ -438,6 +438,90 @@ class BinaryScore:
             {column: measures},
             index=["Concordant", "Discordant", "Tied", "Total"],
         )
+
+    @property
+    def somersd_score(self) -> float:
+        """Return the Somer's D score, computed as the difference between the
+        number of concordant and discordant pairs, divided by the total number
+        of pairs.
+
+        Also called: Gini coefficient.
+
+        Returns
+        -------
+        float
+            Somer's D score.
+
+        References
+        -------
+        https://en.wikipedia.org/wiki/Somers%27_D#Somers'_D_for_binary_dependent_variables
+        """
+        concordant_pairs = self.pairs_count().loc["Concordant", "Count"]
+        discordant_pairs = self.pairs_count().loc["Discordant", "Count"]
+        total_pairs = self.pairs_count().loc["Total", "Count"]
+        return (concordant_pairs - discordant_pairs) / total_pairs
+
+    @property
+    def goodmankruskagamma_score(self) -> float:
+        """Return the Goodman and Kruskal's gamma, computed as the ratio between
+        the difference and the sum of the number of concordant and discordant
+        pairs.
+
+        Returns
+        -------
+        float
+            Goodman and Kruskal's gamma.
+
+        References
+        -------
+        https://en.wikipedia.org/wiki/Goodman_and_Kruskal%27s_gamma
+        """
+        concordant_pairs = self.pairs_count().loc["Concordant", "Count"]
+        discordant_pairs = self.pairs_count().loc["Discordant", "Count"]
+        return (concordant_pairs - discordant_pairs) / (
+            concordant_pairs + discordant_pairs
+        )
+
+    @property
+    def kendalltau_score(self) -> float:
+        """Return the Kendall tau-a, computed as the difference between the
+        number of concordant and discordant pairs, divided by the number of
+        combinations of pairs.
+
+        Returns
+        -------
+        float
+            Kendall tau-a.
+
+        References
+        -------
+        https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient#Tau-a
+        """
+        concordant_pairs = self.pairs_count().loc["Concordant", "Count"]
+        discordant_pairs = self.pairs_count().loc["Discordant", "Count"]
+        return (concordant_pairs - discordant_pairs) / (
+            0.5 * len(self) * (len(self) - 1)
+        )
+
+    @property
+    def c_score(self) -> float:
+        """Return the Kendall tau-a, computed as the difference between the
+        number of concordant and discordant pairs, divided by the number of
+        combinations of pairs.
+
+        Returns
+        -------
+        float
+            Kendall tau-a.
+
+        References
+        -------
+        https://en.wikipedia.org/wiki/Kendall_rank_correlation_coefficient#Tau-a
+        """
+        concordant_pairs = self.pairs_count().loc["Concordant", "Count"]
+        discordant_pairs = self.pairs_count().loc["Discordant", "Count"]
+        return (concordant_pairs - discordant_pairs) / (
+            0.5 * len(self) * (len(self) - 1)
         )
 
     def to_binary_prediction(self, threshold: float | str = 0.5) -> BinaryPrediction:

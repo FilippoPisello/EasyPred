@@ -306,3 +306,63 @@ def test_plot_metric_does_not_fail():
 def test_pairs(score, relative, expected):
     actual = score.pairs_count(relative=relative)
     pd.testing.assert_frame_equal(actual, expected, check_dtype=False)
+
+
+@pytest.mark.parametrize(
+    "score, decimals, expected",
+    [
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.85, 0.73, 0.45]),
+            3,
+            (1 / 3),
+        ),
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.81, 0.73, 0.45]),
+            3,
+            (1 / 2),
+        ),
+    ],
+)
+def test_somersd_score(score, decimals, expected):
+    score.computation_decimals = decimals
+    assert score.somersd_score == expected
+
+
+@pytest.mark.parametrize(
+    "score, decimals, expected",
+    [
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.85, 0.73, 0.45]),
+            3,
+            (1 / 3),
+        ),
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.81, 0.73, 0.45]),
+            3,
+            (3 / 5),
+        ),
+    ],
+)
+def test_gkgamma_score(score, decimals, expected):
+    score.computation_decimals = decimals
+    assert score.goodmankruskagamma_score == expected
+
+
+@pytest.mark.parametrize(
+    "score, decimals, expected",
+    [
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.85, 0.73, 0.45]),
+            3,
+            (1 / 5),
+        ),
+        (
+            BinaryScore([1, 0, 0, 1, 0], [0.81, 0.31, 0.81, 0.73, 0.45]),
+            3,
+            (3 / 10),
+        ),
+    ],
+)
+def test_kendaltau_score(score, decimals, expected):
+    score.computation_decimals = decimals
+    assert score.kendalltau_score == expected
