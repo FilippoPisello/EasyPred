@@ -242,7 +242,7 @@ def test_auc_plot_does_not_fail():
         assert False, f"plot_roc_curve() raised an exception {e}"
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 def test_score_hist_does_not_fail():
     try:
         score1.plot_score_histogram()

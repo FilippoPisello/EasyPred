@@ -631,7 +631,7 @@ class BinaryScore:
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
         kwargs : key, value mappings
-            Other keyword arguments tp be passed through to
+            Other keyword arguments to be passed through to
             matplotlib.pyplot.plot().
 
         Returns
@@ -692,7 +692,7 @@ class BinaryScore:
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
         kwargs : key, value mappings
-            Other keyword arguments tp be passed through to
+            Other keyword arguments to be passed through to
             matplotlib.pyplot.hist().
 
         Returns
@@ -762,7 +762,7 @@ class BinaryScore:
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
         kwargs : key, value mappings
-            Other keyword arguments tp be passed through to
+            Other keyword arguments to be passed through to
             matplotlib.pyplot.hist().
 
         Returns
