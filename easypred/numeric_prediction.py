@@ -288,6 +288,7 @@ class NumericPrediction(Prediction):
         title_size: int = 14,
         axes_labels_size: int = 12,
         axs: list[Axes] | None = None,
+        **kwargs,
     ) -> np.ndarray:
         """Plot a two panels figure containing the plot of real against fitted
         values and the plot of residuals against fitted values.
@@ -311,6 +312,9 @@ class NumericPrediction(Prediction):
             List of axes object of length 2 to draw the plot onto. Otherwise
             creates new Figure and Axes. Use this option to further customize
             the plot.
+        kwargs : key, value mappings
+            Other keyword arguments to be passed through to
+            matplotlib.pyplot.scatter() of each subplot.
 
         Returns
         -------
@@ -335,10 +339,16 @@ class NumericPrediction(Prediction):
             _, axs = plt.subplots(nrows=1, ncols=2, figsize=figsize)
 
         self.plot_fit(
-            title_size=title_size, axes_labels_size=axes_labels_size, ax=axs[0]
+            title_size=title_size,
+            axes_labels_size=axes_labels_size,
+            ax=axs[0],
+            **kwargs,
         )
         self.plot_residuals(
-            title_size=title_size, axes_labels_size=axes_labels_size, ax=axs[1]
+            title_size=title_size,
+            axes_labels_size=axes_labels_size,
+            ax=axs[1],
+            **kwargs,
         )
 
         return axs
@@ -350,6 +360,7 @@ class NumericPrediction(Prediction):
         title_size: int = 14,
         axes_labels_size: int = 12,
         ax: Axes | None = None,
+        **kwargs,
     ) -> Axes:
         """Plot the scatterplot depicting the residuals against fitted values.
 
@@ -368,6 +379,9 @@ class NumericPrediction(Prediction):
         ax : matplotlib Axes, optional
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
+        kwargs : key, value mappings
+            Other keyword arguments to be passed through to
+            matplotlib.pyplot.scatter().
 
         Returns
         -------
@@ -387,7 +401,7 @@ class NumericPrediction(Prediction):
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
 
-        ax.scatter(self.fitted_values, self.residuals())
+        ax.scatter(self.fitted_values, self.residuals(), **kwargs)
 
         if hline is not None:
             ax.axhline(0, c="red", ls="--")
@@ -407,6 +421,7 @@ class NumericPrediction(Prediction):
         title_size: int = 14,
         axes_labels_size: int = 12,
         ax: Axes | None = None,
+        **kwargs,
     ) -> Axes:
         """Plot the scatterplot depicting real against fitted values.
 
@@ -426,6 +441,9 @@ class NumericPrediction(Prediction):
         ax : matplotlib Axes, optional
             Axes object to draw the plot onto, otherwise creates new Figure
             and Axes. Use this option to further customize the plot.
+        kwargs : key, value mappings
+            Other keyword arguments to be passed through to
+            matplotlib.pyplot.scatter().
 
         Returns
         -------
@@ -445,7 +463,7 @@ class NumericPrediction(Prediction):
         if ax is None:
             _, ax = plt.subplots(figsize=figsize)
 
-        ax.scatter(self.fitted_values, self.real_values)
+        ax.scatter(self.fitted_values, self.real_values, **kwargs)
 
         if line_slope is not None:
             min_val = min([self.real_values.min(), self.fitted_values.min()]) * 0.95

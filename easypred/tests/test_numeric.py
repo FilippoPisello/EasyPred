@@ -92,15 +92,18 @@ class TestNumericPrediction(TestCase):
         no exceptions raised"""
         try:
             self.pred_l1l2.plot_fit()
+            self.pred_l1l2.plot_fit(c="red")
         except Exception as e:
             self.fail(f"The following exception was raised: {e}")
 
         try:
             self.pred_l1l2.plot_residuals()
+            self.pred_l1l2.plot_residuals(c="red")
         except Exception as e:
             self.fail(f"The following exception was raised: {e}")
 
         try:
             self.pred_l1l2.plot_fit_residuals()
+            self.pred_l1l2.plot_fit_residuals(c="red")
         except Exception as e:
             self.fail(f"The following exception was raised: {e}")
