@@ -56,3 +56,13 @@ def test_check_length(array1, array2):
 def test_fail_check_length():
     with pytest.raises(ValueError):
         utils.check_lengths_match(np.array([1, 2, 3]), np.array([1, 1]))
+
+
+@pytest.mark.parametrize(
+    "input, output",
+    [
+        ([np.array([0, 0, 1])], [np.array([0, 0, 1])]),
+    ],
+)
+def test_check_dimensionality(input, output):
+    assert utils.check_dimensionality(*input) == output

@@ -56,3 +56,20 @@ def check_lengths_match(
             f"{name_array1} has length: {len1}.\n"
             f"{name_array2} has length: {len2}."
         )
+
+
+def check_dimensionality(*arrays: Vector) -> Vector:
+    for index, array in enumerate(arrays):
+        if not isinstance(array, np.ndarray):
+            continue
+
+        if array.ndim == 1:
+            continue
+
+        squeezed_array = array.squeeze()
+        if squeezed_array.ndim == 1:
+            arrays[index] = squeezed_array
+            continue
+
+        raise ValueError(f"Only 1D arrays are supported, {array} was passed")
+    return arrays
