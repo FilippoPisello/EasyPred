@@ -385,7 +385,7 @@ class BinaryPrediction(Prediction):
             },
             index=["Value"],
         ).transpose()
-        return basic_info.append(new_info)
+        return pd.concat([basic_info, new_info])
 
     @classmethod
     def from_prediction(
